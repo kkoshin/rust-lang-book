@@ -88,7 +88,7 @@ nav:
         - 'Concise Control Flow with `if let`': ch06-03-if-let.md
 
   - 'Basic Rust Literacy':
-    - 'Managing Growing Projects with Packages, Crates, and Modules': ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
+    - 'Managing Growing Projects with Packages, Crates, and Modules':
       - 'Overview': ch07-00-managing-growing-projects-with-packages-crates-and-modules.md
       - 'Packages and Crates': ch07-01-packages-and-crates.md
       - 'Defining Modules to Control Scope and Privacy': ch07-02-defining-modules-to-control-scope-and-privacy.md
