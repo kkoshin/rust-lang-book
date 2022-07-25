@@ -1,0 +1,3255 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="rust-lang">
+      
+      
+        <link rel="canonical" href="https://kkoshin.github.io/rust-lang-book/ch11-01-writing-tests/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.3.9">
+    
+    
+      
+        <title>How to Write Tests - The Rust Programming Language</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.1d29e8d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-orange" data-md-color-accent="pink">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-to-write-tests" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="The Rust Programming Language" class="md-header__button md-logo" aria-label="The Rust Programming Language" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            The Rust Programming Language
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              How to Write Tests
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-orange" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kkoshin/rust-lang-book" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rust-lang-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        The Rust Programming Language
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch01-00-getting-started/" class="md-tabs__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch07-00-managing-growing-projects-with-packages-crates-and-modules/" class="md-tabs__link md-tabs__link--active">
+        Basic Rust Literacy
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch13-00-functional-features/" class="md-tabs__link">
+        Thinking in Rust
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch18-00-patterns/" class="md-tabs__link">
+        Advanced Topics
+      </a>
+    </li>
+  
+
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="The Rust Programming Language" class="md-nav__button md-logo" aria-label="The Rust Programming Language" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    The Rust Programming Language
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kkoshin/rust-lang-book" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rust-lang-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          The Rust Programming Language
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="The Rust Programming Language" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          The Rust Programming Language
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foreword/" class="md-nav__link">
+        Foreword
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch00-00-introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-00-getting-started/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-01-installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-02-hello-world/" class="md-nav__link">
+        Hello, World!
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-03-hello-cargo/" class="md-nav__link">
+        Hello, Cargo!
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch02-00-guessing-game-tutorial/" class="md-nav__link">
+        Programming a Guessing Game
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_6" type="checkbox" id="__nav_2_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_6">
+          Common Programming Concepts
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Common Programming Concepts" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_6">
+          <span class="md-nav__icon md-icon"></span>
+          Common Programming Concepts
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-00-common-programming-concepts/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-01-variables-and-mutability/" class="md-nav__link">
+        Variables and Mutability
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-02-data-types/" class="md-nav__link">
+        Data Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-03-how-functions-work/" class="md-nav__link">
+        Functions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-04-comments/" class="md-nav__link">
+        Comments
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-05-control-flow/" class="md-nav__link">
+        Control Flow
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_7" type="checkbox" id="__nav_2_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_7">
+          Understanding Ownership
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Understanding Ownership" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_7">
+          <span class="md-nav__icon md-icon"></span>
+          Understanding Ownership
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-00-understanding-ownership/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-01-what-is-ownership/" class="md-nav__link">
+        What is Ownership?
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-02-references-and-borrowing/" class="md-nav__link">
+        References and Borrowing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-03-slices/" class="md-nav__link">
+        The Slice Type
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_8" type="checkbox" id="__nav_2_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_8">
+          Using Structs to Structure Related Data
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Using Structs to Structure Related Data" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_8">
+          <span class="md-nav__icon md-icon"></span>
+          Using Structs to Structure Related Data
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-00-structs/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-01-defining-structs/" class="md-nav__link">
+        Defining and Instantiating Structs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-02-example-structs/" class="md-nav__link">
+        An Example Program Using Structs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-03-method-syntax/" class="md-nav__link">
+        Method Syntax
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_9" type="checkbox" id="__nav_2_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_9">
+          Enums and Pattern Matching
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Enums and Pattern Matching" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_9">
+          <span class="md-nav__icon md-icon"></span>
+          Enums and Pattern Matching
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-00-enums/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-01-defining-an-enum/" class="md-nav__link">
+        Defining an Enum
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-02-match/" class="md-nav__link">
+        The `match` Control Flow Construct
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-03-if-let/" class="md-nav__link">
+        Concise Control Flow with `if let`
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Basic Rust Literacy
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Basic Rust Literacy" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Basic Rust Literacy
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          Managing Growing Projects with Packages, Crates, and Modules
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Managing Growing Projects with Packages, Crates, and Modules" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Managing Growing Projects with Packages, Crates, and Modules
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-00-managing-growing-projects-with-packages-crates-and-modules/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-01-packages-and-crates/" class="md-nav__link">
+        Packages and Crates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-02-defining-modules-to-control-scope-and-privacy/" class="md-nav__link">
+        Defining Modules to Control Scope and Privacy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-03-paths-for-referring-to-an-item-in-the-module-tree/" class="md-nav__link">
+        Paths for Referring to an Item in the Module Tree
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-04-bringing-paths-into-scope-with-the-use-keyword/" class="md-nav__link">
+        Bringing Paths Into Scope with the `use` Keyword
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-05-separating-modules-into-different-files/" class="md-nav__link">
+        Separating Modules into Different Files
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2">
+          Common Collections
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Common Collections" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Common Collections
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-00-common-collections/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-01-vectors/" class="md-nav__link">
+        Storing Lists of Values with Vectors
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-02-strings/" class="md-nav__link">
+        Storing UTF-8 Encoded Text with Strings
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-03-hash-maps/" class="md-nav__link">
+        Storing Keys with Associated Values in Hash Maps
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_3" type="checkbox" id="__nav_3_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_3">
+          Error Handling
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Error Handling" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          Error Handling
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-00-error-handling/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-01-unrecoverable-errors-with-panic/" class="md-nav__link">
+        Unrecoverable Errors with `panic!`
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-02-recoverable-errors-with-result/" class="md-nav__link">
+        Recoverable Errors with `Result`
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-03-to-panic-or-not-to-panic/" class="md-nav__link">
+        To `panic!` or Not to `panic!`
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_4" type="checkbox" id="__nav_3_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_4">
+          Generic Types, Traits, and Lifetimes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Generic Types, Traits, and Lifetimes" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          Generic Types, Traits, and Lifetimes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-00-generics/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-01-syntax/" class="md-nav__link">
+        Generic Data Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-02-traits/" class="md-nav__link">
+        Traits: Defining Shared Behavior
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-03-lifetime-syntax/" class="md-nav__link">
+        Validating References with Lifetimes
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_5" type="checkbox" id="__nav_3_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_5">
+          Writing Automated Tests
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Writing Automated Tests" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_5">
+          <span class="md-nav__icon md-icon"></span>
+          Writing Automated Tests
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11-00-testing/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          How to Write Tests
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        How to Write Tests
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-write-tests" class="md-nav__link">
+    How to Write Tests
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Write Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-anatomy-of-a-test-function" class="md-nav__link">
+    The Anatomy of a Test Function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-results-with-the-assert-macro" class="md-nav__link">
+    Checking Results with the assert! Macro
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-equality-with-the-assert_eq-and-assert_ne-macros" class="md-nav__link">
+    Testing Equality with the assert_eq! and assert_ne! Macros
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-custom-failure-messages" class="md-nav__link">
+    Adding Custom Failure Messages
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-for-panics-with-should_panic" class="md-nav__link">
+    Checking for Panics with should_panic
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-resultt-e-in-tests" class="md-nav__link">
+    Using Result&lt;T, E&gt; in Tests
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11-02-running-tests/" class="md-nav__link">
+        Controlling How Tests Are Run
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11-03-test-organization/" class="md-nav__link">
+        Test Organization
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_6">
+          An I/O Project: Building a Command Line Program
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="An I/O Project: Building a Command Line Program" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_6">
+          <span class="md-nav__icon md-icon"></span>
+          An I/O Project: Building a Command Line Program
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-00-an-io-project/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-01-accepting-command-line-arguments/" class="md-nav__link">
+        Accepting Command Line Arguments
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-02-reading-a-file/" class="md-nav__link">
+        Reading a File
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-03-improving-error-handling-and-modularity/" class="md-nav__link">
+        Refactoring to Improve Modularity and Error Handling
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-04-testing-the-librarys-functionality/" class="md-nav__link">
+        Developing the Library’s Functionality with Test Driven Development
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-05-working-with-environment-variables/" class="md-nav__link">
+        Working with Environment Variables
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-06-writing-to-stderr-instead-of-stdout/" class="md-nav__link">
+        Writing Error Messages to Standard Error Instead of Standard Output
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Thinking in Rust
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Thinking in Rust" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Thinking in Rust
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Functional Language Features: Iterators and Closures
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Functional Language Features: Iterators and Closures" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Functional Language Features: Iterators and Closures
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-00-functional-features/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-01-closures/" class="md-nav__link">
+        Closures: Anonymous Functions that Capture Their Environment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-02-iterators/" class="md-nav__link">
+        Processing a Series of Items with Iterators
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-03-improving-our-io-project/" class="md-nav__link">
+        Improving Our I/O Project
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-04-performance/" class="md-nav__link">
+        Comparing Performance: Loops vs. Iterators
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2" type="checkbox" id="__nav_4_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_2">
+          More about Cargo and Crates.io
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="More about Cargo and Crates.io" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          More about Cargo and Crates.io
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-00-more-about-cargo/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-01-release-profiles/" class="md-nav__link">
+        Customizing Builds with Release Profiles
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-02-publishing-to-crates-io/" class="md-nav__link">
+        Publishing a Crate to Crates.io
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-03-cargo-workspaces/" class="md-nav__link">
+        Cargo Workspaces
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-04-installing-binaries/" class="md-nav__link">
+        Installing Binaries from Crates.io with `cargo install`
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-05-extending-cargo/" class="md-nav__link">
+        Extending Cargo with Custom Commands
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3" type="checkbox" id="__nav_4_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3">
+          Smart Pointers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Smart Pointers" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_3">
+          <span class="md-nav__icon md-icon"></span>
+          Smart Pointers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-00-smart-pointers/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-01-box/" class="md-nav__link">
+        Using `Box<T>` to Point to Data on the Heap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-02-deref/" class="md-nav__link">
+        Treating Smart Pointers Like Regular References with the `Deref` Trait
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-03-drop/" class="md-nav__link">
+        Running Code on Cleanup with the `Drop` Trait
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-04-rc/" class="md-nav__link">
+        `Rc<T>`, the Reference Counted Smart Pointer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-05-interior-mutability/" class="md-nav__link">
+        `RefCell<T>` and the Interior Mutability Pattern
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-06-reference-cycles/" class="md-nav__link">
+        Reference Cycles Can Leak Memory
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_4" type="checkbox" id="__nav_4_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_4">
+          Fearless Concurrency
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Fearless Concurrency" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_4">
+          <span class="md-nav__icon md-icon"></span>
+          Fearless Concurrency
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-00-concurrency/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-01-threads/" class="md-nav__link">
+        Using Threads to Run Code Simultaneously
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-02-message-passing/" class="md-nav__link">
+        Using Message Passing to Transfer Data Between Threads
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-03-shared-state/" class="md-nav__link">
+        Shared-State Concurrency
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-04-extensible-concurrency-sync-and-send/" class="md-nav__link">
+        Extensible Concurrency with the `Sync` and `Send` Traits
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5">
+          Object Oriented Programming Features of Rust
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Object Oriented Programming Features of Rust" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_5">
+          <span class="md-nav__icon md-icon"></span>
+          Object Oriented Programming Features of Rust
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-00-oop/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-01-what-is-oo/" class="md-nav__link">
+        Characteristics of Object-Oriented Languages
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-02-trait-objects/" class="md-nav__link">
+        Using Trait Objects That Allow for Values of Different Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-03-oo-design-patterns/" class="md-nav__link">
+        Implementing an Object-Oriented Design Pattern
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Advanced Topics
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Advanced Topics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced Topics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_1" type="checkbox" id="__nav_5_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_1">
+          Patterns and Matching
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Patterns and Matching" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_1">
+          <span class="md-nav__icon md-icon"></span>
+          Patterns and Matching
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-00-patterns/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-01-all-the-places-for-patterns/" class="md-nav__link">
+        All the Places Patterns Can Be Used
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-02-refutability/" class="md-nav__link">
+        Refutability: Whether a Pattern Might Fail to Match
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-03-pattern-syntax/" class="md-nav__link">
+        Pattern Syntax
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2" type="checkbox" id="__nav_5_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_2">
+          Advanced Features
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Advanced Features" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced Features
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-00-advanced-features/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-01-unsafe-rust/" class="md-nav__link">
+        Unsafe Rust
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-03-advanced-traits/" class="md-nav__link">
+        Advanced Traits
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-04-advanced-types/" class="md-nav__link">
+        Advanced Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-05-advanced-functions-and-closures/" class="md-nav__link">
+        Advanced Functions and Closures
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-06-macros/" class="md-nav__link">
+        Macros
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_3" type="checkbox" id="__nav_5_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_3">
+          Final Project: Building a Multithreaded Web Server
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Final Project: Building a Multithreaded Web Server" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_3">
+          <span class="md-nav__icon md-icon"></span>
+          Final Project: Building a Multithreaded Web Server
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-00-final-project-a-web-server/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-01-single-threaded/" class="md-nav__link">
+        Building a Single-Threaded Web Server
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-02-multithreaded/" class="md-nav__link">
+        Turning Our Single-Threaded Server into a Multithreaded Server
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-03-graceful-shutdown-and-cleanup/" class="md-nav__link">
+        Graceful Shutdown and Cleanup
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_4" type="checkbox" id="__nav_5_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_4">
+          Appendix
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Appendix" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_4">
+          <span class="md-nav__icon md-icon"></span>
+          Appendix
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-00/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-01-keywords/" class="md-nav__link">
+        A - Keywords
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-02-operators/" class="md-nav__link">
+        B - Operators and Symbols
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-03-derivable-traits/" class="md-nav__link">
+        C - Derivable Traits
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-04-useful-development-tools/" class="md-nav__link">
+        D - Useful Development Tools
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-05-editions/" class="md-nav__link">
+        E - Editions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-06-translation/" class="md-nav__link">
+        F - Translations of the Book
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-07-nightly-rust/" class="md-nav__link">
+        G - How Rust is Made and “Nightly Rust”
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-to-write-tests" class="md-nav__link">
+    How to Write Tests
+  </a>
+  
+    <nav class="md-nav" aria-label="How to Write Tests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-anatomy-of-a-test-function" class="md-nav__link">
+    The Anatomy of a Test Function
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-results-with-the-assert-macro" class="md-nav__link">
+    Checking Results with the assert! Macro
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-equality-with-the-assert_eq-and-assert_ne-macros" class="md-nav__link">
+    Testing Equality with the assert_eq! and assert_ne! Macros
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-custom-failure-messages" class="md-nav__link">
+    Adding Custom Failure Messages
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#checking-for-panics-with-should_panic" class="md-nav__link">
+    Checking for Panics with should_panic
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-resultt-e-in-tests" class="md-nav__link">
+    Using Result&lt;T, E&gt; in Tests
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+  <a href="https://github.com/kkoshin/rust-lang-book/edit/main/src/ch11-01-writing-tests.md" title="Edit this page" class="md-content__button md-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+
+  <h1>How to Write Tests</h1>
+
+<h2 id="how-to-write-tests">How to Write Tests</h2>
+<p>Tests are Rust functions that verify that the non-test code is functioning in
+the expected manner. The bodies of test functions typically perform these three
+actions:</p>
+<ol>
+<li>Set up any needed data or state.</li>
+<li>Run the code you want to test.</li>
+<li>Assert the results are what you expect.</li>
+</ol>
+<p>Let’s look at the features Rust provides specifically for writing tests that
+take these actions, which include the <code>test</code> attribute, a few macros, and the
+<code>should_panic</code> attribute.</p>
+<h3 id="the-anatomy-of-a-test-function">The Anatomy of a Test Function</h3>
+<p>At its simplest, a test in Rust is a function that’s annotated with the <code>test</code>
+attribute. Attributes are metadata about pieces of Rust code; one example is
+the <code>derive</code> attribute we used with structs in Chapter 5. To change a function
+into a test function, add <code>#[test]</code> on the line before <code>fn</code>. When you run your
+tests with the <code>cargo test</code> command, Rust builds a test runner binary that runs
+the annotated functions and reports on whether each
+test function passes or fails.</p>
+<p>Whenever we make a new library project with Cargo, a test module with a test
+function in it is automatically generated for us. This module gives you a
+template for writing your tests so you don’t have to look up the exact
+structure and syntax every time you start a new project. You can add as many
+additional test functions and as many test modules as you want!</p>
+<p>We’ll explore some aspects of how tests work by experimenting with the template
+test before we actually test any code. Then we’ll write some real-world tests
+that call some code that we’ve written and assert that its behavior is correct.</p>
+<p>Let’s create a new library project called <code>adder</code> that will add two numbers:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gp">$ </span>cargo new adder --lib
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="go">     Created library `adder` project</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gp">$ </span><span class="nb">cd</span> adder
+</code></pre></div>
+<p>The contents of the <em>src/lib.rs</em> file in your <code>adder</code> library should look like
+Listing 11-1.</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<!-- manual-regeneration
+cd listings/ch11-writing-automated-tests
+rm -rf listing-11-01
+cargo new listing-11-01 --lib --name adder
+cd listing-11-01
+cargo test
+git co output.txt
+cd ../../..
+-->
+
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">01</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 11-1: The test module and function generated
+automatically by <code>cargo new</code></span></p>
+<p>For now, let’s ignore the top two lines and focus on the function. Note the
+<code>#[test]</code> annotation: this attribute indicates this is a test function, so the
+test runner knows to treat this function as a test. We might also have non-test
+functions in the <code>tests</code> module to help set up common scenarios or perform
+common operations, so we always need to indicate which functions are tests.</p>
+<p>The example function body uses the <code>assert_eq!</code> macro to assert that <code>result</code>,
+which contains the result of adding 2 and 2, equals 4. This assertion serves as
+an example of the format for a typical test. Let’s run it to see that this test
+passes.</p>
+<p>The <code>cargo test</code> command runs all tests in our project, as shown in Listing
+11-2.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/listing-11-01/output.txt}}</span>
+</code></pre></div>
+<p><span class="caption">Listing 11-2: The output from running the automatically
+generated test</span></p>
+<p>Cargo compiled and ran the test. We see the line <code>running 1 test</code>. The next
+line shows the name of the generated test function, called <code>it_works</code>, and that
+the result of running that test is <code>ok</code>. The overall summary <code>test result: ok.</code>
+means that all the tests passed, and the portion that reads <code>1 passed; 0
+failed</code> totals the number of tests that passed or failed.</p>
+<p>It’s possible to mark a test as ignored so it doesn’t run in a particular
+instance; we’ll cover that in the <a href="ch11-02-running-tests.html#ignoring-some-tests-unless-specifically-requested">“Ignoring Some Tests Unless Specifically
+Requested”</a><!-- ignore --> section later in this chapter. Because we
+haven’t done that here, the summary shows <code>0 ignored</code>. We can also pass an
+argument to the <code>cargo test</code> command to run only tests whose name matches a
+string; this is called <em>filtering</em> and we’ll cover that in the <a href="ch11-02-running-tests.html#running-a-subset-of-tests-by-name">“Running a
+Subset of Tests by Name”</a><!-- ignore --> section. We also haven’t
+filtered the tests being run, so the end of the summary shows <code>0 filtered out</code>.</p>
+<p>The <code>0 measured</code> statistic is for benchmark tests that measure performance.
+Benchmark tests are, as of this writing, only available in nightly Rust. See
+<a href="../unstable-book/library-features/test.html">the documentation about benchmark tests</a> to learn more.</p>
+<p>The next part of the test output starting at <code>Doc-tests adder</code> is for the
+results of any documentation tests. We don’t have any documentation tests yet,
+but Rust can compile any code examples that appear in our API documentation.
+This feature helps keep your docs and your code in sync! We’ll discuss how to
+write documentation tests in the <a href="ch14-02-publishing-to-crates-io.html#documentation-comments-as-tests">“Documentation Comments as
+Tests”</a><!-- ignore --> section of Chapter 14. For now, we’ll
+ignore the <code>Doc-tests</code> output.</p>
+<p>Let’s start to customize the test to our own needs. First change the name of
+the <code>it_works</code> function to a different name, such as <code>exploration</code>, like so:</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="n">changing</span><span class="o">-</span><span class="n">test</span><span class="o">-</span><span class="n">name</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>Then run <code>cargo test</code> again. The output now shows <code>exploration</code> instead of
+<code>it_works</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/no-listing-01-changing-test-name/output.txt}}</span>
+</code></pre></div>
+<p>Now we’ll add another test, but this time we’ll make a test that fails! Tests
+fail when something in the test function panics. Each test is run in a new
+thread, and when the main thread sees that a test thread has died, the test is
+marked as failed. In Chapter 9, we talked about how the simplest way to panic
+is to call the <code>panic!</code> macro. Enter the new test as a function named
+<code>another</code>, so your <em>src/lib.rs</em> file looks like Listing 11-3.</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">03</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 11-3: Adding a second test that will fail because
+we call the <code>panic!</code> macro</span></p>
+<p>Run the tests again using <code>cargo test</code>. The output should look like Listing
+11-4, which shows that our <code>exploration</code> test passed and <code>another</code> failed.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/listing-11-03/output.txt}}</span>
+</code></pre></div>
+<p><span class="caption">Listing 11-4: Test results when one test passes and one
+test fails</span></p>
+<p>Instead of <code>ok</code>, the line <code>test tests::another</code> shows <code>FAILED</code>. Two new
+sections appear between the individual results and the summary: the first
+displays the detailed reason for each test failure. In this case, we get the
+details that <code>another</code> failed because it <code>panicked at 'Make this test fail'</code> on
+line 10 in the <em>src/lib.rs</em> file. The next section lists just the names of all
+the failing tests, which is useful when there are lots of tests and lots of
+detailed failing test output. We can use the name of a failing test to run just
+that test to more easily debug it; we’ll talk more about ways to run tests in
+the <a href="ch11-02-running-tests.html#controlling-how-tests-are-run">“Controlling How Tests Are Run”</a><!-- ignore
+--> section.</p>
+<p>The summary line displays at the end: overall, our test result is <code>FAILED</code>. We
+had one test pass and one test fail.</p>
+<p>Now that you’ve seen what the test results look like in different scenarios,
+let’s look at some macros other than <code>panic!</code> that are useful in tests.</p>
+<h3 id="checking-results-with-the-assert-macro">Checking Results with the <code>assert!</code> Macro</h3>
+<p>The <code>assert!</code> macro, provided by the standard library, is useful when you want
+to ensure that some condition in a test evaluates to <code>true</code>. We give the
+<code>assert!</code> macro an argument that evaluates to a Boolean. If the value is
+<code>true</code>, nothing happens and the test passes. If the value is <code>false</code>, the
+<code>assert!</code> macro calls <code>panic!</code> to cause the test to fail. Using the <code>assert!</code>
+macro helps us check that our code is functioning in the way we intend.</p>
+<p>In Chapter 5, Listing 5-15, we used a <code>Rectangle</code> struct and a <code>can_hold</code>
+method, which are repeated here in Listing 11-5. Let’s put this code in the
+<em>src/lib.rs</em> file, then write some tests for it using the <code>assert!</code> macro.</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">05</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 11-5: Using the <code>Rectangle</code> struct and its
+<code>can_hold</code> method from Chapter 5</span></p>
+<p>The <code>can_hold</code> method returns a Boolean, which means it’s a perfect use case
+for the <code>assert!</code> macro. In Listing 11-6, we write a test that exercises the
+<code>can_hold</code> method by creating a <code>Rectangle</code> instance that has a width of 8 and
+a height of 7 and asserting that it can hold another <code>Rectangle</code> instance that
+has a width of 5 and a height of 1.</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">06</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 11-6: A test for <code>can_hold</code> that checks whether a
+larger rectangle can indeed hold a smaller rectangle</span></p>
+<p>Note that we’ve added a new line inside the <code>tests</code> module: <code>use super::*;</code>.
+The <code>tests</code> module is a regular module that follows the usual visibility rules
+we covered in Chapter 7 in the <a href="ch07-03-paths-for-referring-to-an-item-in-the-module-tree.html">“Paths for Referring to an Item in the Module
+Tree”</a><!-- ignore -->
+section. Because the <code>tests</code> module is an inner module, we need to bring the
+code under test in the outer module into the scope of the inner module. We use
+a glob here so anything we define in the outer module is available to this
+<code>tests</code> module.</p>
+<p>We’ve named our test <code>larger_can_hold_smaller</code>, and we’ve created the two
+<code>Rectangle</code> instances that we need. Then we called the <code>assert!</code> macro and
+passed it the result of calling <code>larger.can_hold(&amp;smaller)</code>. This expression is
+supposed to return <code>true</code>, so our test should pass. Let’s find out!</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/listing-11-06/output.txt}}</span>
+</code></pre></div>
+<p>It does pass! Let’s add another test, this time asserting that a smaller
+rectangle cannot hold a larger rectangle:</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="n">adding</span><span class="o">-</span><span class="n">another</span><span class="o">-</span><span class="n">rectangle</span><span class="o">-</span><span class="n">test</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>Because the correct result of the <code>can_hold</code> function in this case is <code>false</code>,
+we need to negate that result before we pass it to the <code>assert!</code> macro. As a
+result, our test will pass if <code>can_hold</code> returns <code>false</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/no-listing-02-adding-another-rectangle-test/output.txt}}</span>
+</code></pre></div>
+<p>Two tests that pass! Now let’s see what happens to our test results when we
+introduce a bug in our code. We’ll change the implementation of the <code>can_hold</code>
+method by replacing the greater-than sign with a less-than sign when it
+compares the widths:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="n">introducing</span><span class="o">-</span><span class="n">a</span><span class="o">-</span><span class="n">bug</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>Running the tests now produces the following:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/no-listing-03-introducing-a-bug/output.txt}}</span>
+</code></pre></div>
+<p>Our tests caught the bug! Because <code>larger.width</code> is 8 and <code>smaller.width</code> is
+5, the comparison of the widths in <code>can_hold</code> now returns <code>false</code>: 8 is not
+less than 5.</p>
+<h3 id="testing-equality-with-the-assert_eq-and-assert_ne-macros">Testing Equality with the <code>assert_eq!</code> and <code>assert_ne!</code> Macros</h3>
+<p>A common way to verify functionality is to test for equality between the result
+of the code under test and the value you expect the code to return. You could
+do this using the <code>assert!</code> macro and passing it an expression using the <code>==</code>
+operator. However, this is such a common test that the standard library
+provides a pair of macros—<code>assert_eq!</code> and <code>assert_ne!</code>—to perform this test
+more conveniently. These macros compare two arguments for equality or
+inequality, respectively. They’ll also print the two values if the assertion
+fails, which makes it easier to see <em>why</em> the test failed; conversely, the
+<code>assert!</code> macro only indicates that it got a <code>false</code> value for the <code>==</code>
+expression, without printing the values that led to the <code>false</code> value.</p>
+<p>In Listing 11-7, we write a function named <code>add_two</code> that adds <code>2</code> to its
+parameter, then we test this function using the <code>assert_eq!</code> macro.</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">07</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 11-7: Testing the function <code>add_two</code> using the
+<code>assert_eq!</code> macro</span></p>
+<p>Let’s check that it passes!</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/listing-11-07/output.txt}}</span>
+</code></pre></div>
+<p>We pass <code>4</code> as the argument to <code>assert_eq!</code>, which is equal to the result of
+calling <code>add_two(2)</code>. The line for this test is <code>test tests::it_adds_two ...
+ok</code>, and the <code>ok</code> text indicates that our test passed!</p>
+<p>Let’s introduce a bug into our code to see what <code>assert_eq!</code> looks like when it
+fails. Change the implementation of the <code>add_two</code> function to instead add <code>3</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="n">bug</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">add</span><span class="o">-</span><span class="n">two</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>Run the tests again:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/no-listing-04-bug-in-add-two/output.txt}}</span>
+</code></pre></div>
+<p>Our test caught the bug! The <code>it_adds_two</code> test failed, and the message tells
+us that the assertion that fails was <code>assertion failed: `(left == right)`</code>
+and what the <code>left</code> and <code>right</code> values are. This message helps us start
+debugging: the <code>left</code> argument was <code>4</code> but the <code>right</code> argument, where we had
+<code>add_two(2)</code>, was <code>5</code>. You can imagine that this would be especially helpful
+when we have a lot of tests going on.</p>
+<p>Note that in some languages and test frameworks, the parameters to equality
+assertion functions are called <code>expected</code> and <code>actual</code>, and the order in which
+we specify the arguments matters. However, in Rust, they’re called <code>left</code> and
+<code>right</code>, and the order in which we specify the value we expect and the value
+the code produces doesn’t matter. We could write the assertion in this test as
+<code>assert_eq!(add_two(2), 4)</code>, which would result in the same failure message
+that displays <code>assertion failed: `(left == right)`</code>.</p>
+<p>The <code>assert_ne!</code> macro will pass if the two values we give it are not equal and
+fail if they’re equal. This macro is most useful for cases when we’re not sure
+what a value <em>will</em> be, but we know what the value definitely <em>shouldn’t</em> be.
+For example, if we’re testing a function that is guaranteed to change its input
+in some way, but the way in which the input is changed depends on the day of
+the week that we run our tests, the best thing to assert might be that the
+output of the function is not equal to the input.</p>
+<p>Under the surface, the <code>assert_eq!</code> and <code>assert_ne!</code> macros use the operators
+<code>==</code> and <code>!=</code>, respectively. When the assertions fail, these macros print their
+arguments using debug formatting, which means the values being compared must
+implement the <code>PartialEq</code> and <code>Debug</code> traits. All primitive types and most of
+the standard library types implement these traits. For structs and enums that
+you define yourself, you’ll need to implement <code>PartialEq</code> to assert equality of
+those types. You’ll also need to implement <code>Debug</code> to print the values when the
+assertion fails. Because both traits are derivable traits, as mentioned in
+Listing 5-12 in Chapter 5, this is usually as straightforward as adding the
+<code>#[derive(PartialEq, Debug)]</code> annotation to your struct or enum definition. See
+Appendix C, <a href="appendix-03-derivable-traits.html">“Derivable Traits,”</a><!-- ignore --> for more
+details about these and other derivable traits.</p>
+<h3 id="adding-custom-failure-messages">Adding Custom Failure Messages</h3>
+<p>You can also add a custom message to be printed with the failure message as
+optional arguments to the <code>assert!</code>, <code>assert_eq!</code>, and <code>assert_ne!</code> macros. Any
+arguments specified after the required arguments are passed along to the
+<code>format!</code> macro (discussed in Chapter 8 in the <a href="ch08-02-strings.html#concatenation-with-the--operator-or-the-format-macro">“Concatenation with the <code>+</code>
+Operator or the <code>format!</code>
+Macro”</a><!-- ignore -->
+section), so you can pass a format string that contains <code>{}</code> placeholders and
+values to go in those placeholders. Custom messages are useful for documenting
+what an assertion means; when a test fails, you’ll have a better idea of what
+the problem is with the code.</p>
+<p>For example, let’s say we have a function that greets people by name and we
+want to test that the name we pass into the function appears in the output:</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="n">greeter</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>The requirements for this program haven’t been agreed upon yet, and we’re
+pretty sure the <code>Hello</code> text at the beginning of the greeting will change. We
+decided we don’t want to have to update the test when the requirements change,
+so instead of checking for exact equality to the value returned from the
+<code>greeting</code> function, we’ll just assert that the output contains the text of the
+input parameter.</p>
+<p>Now let’s introduce a bug into this code by changing <code>greeting</code> to exclude
+<code>name</code> to see what the default test failure looks like:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="n">greeter</span><span class="o">-</span><span class="n">with</span><span class="o">-</span><span class="n">bug</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>Running this test produces the following:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/no-listing-06-greeter-with-bug/output.txt}}</span>
+</code></pre></div>
+<p>This result just indicates that the assertion failed and which line the
+assertion is on. A more useful failure message would print the value from the
+<code>greeting</code> function. Let’s add a custom failure message composed of a format
+string with a placeholder filled in with the actual value we got from the
+<code>greeting</code> function:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="n">custom</span><span class="o">-</span><span class="n">failure</span><span class="o">-</span><span class="n">message</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>Now when we run the test, we’ll get a more informative error message:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/no-listing-07-custom-failure-message/output.txt}}</span>
+</code></pre></div>
+<p>We can see the value we actually got in the test output, which would help us
+debug what happened instead of what we were expecting to happen.</p>
+<h3 id="checking-for-panics-with-should_panic">Checking for Panics with <code>should_panic</code></h3>
+<p>In addition to checking return values, it’s important to check that our code
+handles error conditions as we expect. For example, consider the <code>Guess</code> type
+that we created in Chapter 9, Listing 9-13. Other code that uses <code>Guess</code>
+depends on the guarantee that <code>Guess</code> instances will contain only values
+between 1 and 100. We can write a test that ensures that attempting to create a
+<code>Guess</code> instance with a value outside that range panics.</p>
+<p>We do this by adding the attribute <code>should_panic</code> to our test function. The
+test passes if the code inside the function panics; the test fails if the code
+inside the function doesn’t panic.</p>
+<p>Listing 11-8 shows a test that checks that the error conditions of <code>Guess::new</code>
+happen when we expect them to.</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">08</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 11-8: Testing that a condition will cause a
+<code>panic!</code></span></p>
+<p>We place the <code>#[should_panic]</code> attribute after the <code>#[test]</code> attribute and
+before the test function it applies to. Let’s look at the result when this test
+passes:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/listing-11-08/output.txt}}</span>
+</code></pre></div>
+<p>Looks good! Now let’s introduce a bug in our code by removing the condition
+that the <code>new</code> function will panic if the value is greater than 100:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">08</span><span class="o">-</span><span class="n">guess</span><span class="o">-</span><span class="n">with</span><span class="o">-</span><span class="n">bug</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>When we run the test in Listing 11-8, it will fail:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/no-listing-08-guess-with-bug/output.txt}}</span>
+</code></pre></div>
+<p>We don’t get a very helpful message in this case, but when we look at the test
+function, we see that it’s annotated with <code>#[should_panic]</code>. The failure we got
+means that the code in the test function did not cause a panic.</p>
+<p>Tests that use <code>should_panic</code> can be imprecise. A <code>should_panic</code> test would
+pass even if the test panics for a different reason from the one we were
+expecting. To make <code>should_panic</code> tests more precise, we can add an optional
+<code>expected</code> parameter to the <code>should_panic</code> attribute. The test harness will
+make sure that the failure message contains the provided text. For example,
+consider the modified code for <code>Guess</code> in Listing 11-9 where the <code>new</code> function
+panics with different messages depending on whether the value is too small or
+too large.</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">11</span><span class="o">-</span><span class="mi">09</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 11-9: Testing for a <code>panic!</code> with a panic message
+containing a specified substring</span></p>
+<p>This test will pass because the value we put in the <code>should_panic</code> attribute’s
+<code>expected</code> parameter is a substring of the message that the <code>Guess::new</code>
+function panics with. We could have specified the entire panic message that we
+expect, which in this case would be <code>Guess value must be less than or equal to
+100, got 200.</code> What you choose to specify depends on how much of the panic
+message is unique or dynamic and how precise you want your test to be. In this
+case, a substring of the panic message is enough to ensure that the code in the
+test function executes the <code>else if value &gt; 100</code> case.</p>
+<p>To see what happens when a <code>should_panic</code> test with an <code>expected</code> message
+fails, let’s again introduce a bug into our code by swapping the bodies of the
+<code>if value &lt; 1</code> and the <code>else if value &gt; 100</code> blocks:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">09</span><span class="o">-</span><span class="n">guess</span><span class="o">-</span><span class="n">with</span><span class="o">-</span><span class="n">panic</span><span class="o">-</span><span class="n">msg</span><span class="o">-</span><span class="n">bug</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>This time when we run the <code>should_panic</code> test, it will fail:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="go">{{#include ../listings/ch11-writing-automated-tests/no-listing-09-guess-with-panic-msg-bug/output.txt}}</span>
+</code></pre></div>
+<p>The failure message indicates that this test did indeed panic as we expected,
+but the panic message did not include the expected string <code>'Guess value must be
+less than or equal to 100'</code>. The panic message that we did get in this case was
+<code>Guess value must be greater than or equal to 1, got 200.</code> Now we can start
+figuring out where our bug is!</p>
+<h3 id="using-resultt-e-in-tests">Using <code>Result&lt;T, E&gt;</code> in Tests</h3>
+<p>Our tests so far all panic when they fail. We can also write tests that use
+<code>Result&lt;T, E&gt;</code>! Here’s the test from Listing 11-1, rewritten to use <code>Result&lt;T,
+E&gt;</code> and return an <code>Err</code> instead of panicking:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch11</span><span class="o">-</span><span class="n">writing</span><span class="o">-</span><span class="n">automated</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="n">result</span><span class="o">-</span><span class="k">in</span><span class="o">-</span><span class="n">tests</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>The <code>it_works</code> function now has the <code>Result&lt;(), String&gt;</code> return type. In the
+body of the function, rather than calling the <code>assert_eq!</code> macro, we return
+<code>Ok(())</code> when the test passes and an <code>Err</code> with a <code>String</code> inside when the test
+fails.</p>
+<p>Writing tests so they return a <code>Result&lt;T, E&gt;</code> enables you to use the question
+mark operator in the body of tests, which can be a convenient way to write
+tests that should fail if any operation within them returns an <code>Err</code> variant.</p>
+<p>You can’t use the <code>#[should_panic]</code> annotation on tests that use <code>Result&lt;T,
+E&gt;</code>. To assert that an operation returns an <code>Err</code> variant, <em>don’t</em> use the
+question mark operator on the <code>Result&lt;T, E&gt;</code> value. Instead, use
+<code>assert!(value.is_err())</code>.</p>
+<p>Now that you know several ways to write tests, let’s look at what is happening
+when we run our tests and explore the different options we can use with <code>cargo
+test</code>.</p>
+
+  <hr>
+<div class="md-source-file">
+  <small>
+    
+      Last update:
+      2022-07-25
+    
+  </small>
+</div>
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../ch11-00-testing/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Overview
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../ch11-02-running-tests/" class="md-footer__link md-footer__link--next" aria-label="Next: Controlling How Tests Are Run" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Controlling How Tests Are Run
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2022 Rust
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top", "navigation.tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>
+      
+    
+  </body>
+</html>

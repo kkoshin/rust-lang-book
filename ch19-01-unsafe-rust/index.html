@@ -1,0 +1,3290 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="rust-lang">
+      
+      
+        <link rel="canonical" href="https://kkoshin.github.io/rust-lang-book/ch19-01-unsafe-rust/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.3.9">
+    
+    
+      
+        <title>Unsafe Rust - The Rust Programming Language</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.1d29e8d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-orange" data-md-color-accent="pink">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#unsafe-rust" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="The Rust Programming Language" class="md-header__button md-logo" aria-label="The Rust Programming Language" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            The Rust Programming Language
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Unsafe Rust
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-orange" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kkoshin/rust-lang-book" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rust-lang-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        The Rust Programming Language
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch01-00-getting-started/" class="md-tabs__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch07-00-managing-growing-projects-with-packages-crates-and-modules/" class="md-tabs__link">
+        Basic Rust Literacy
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch13-00-functional-features/" class="md-tabs__link">
+        Thinking in Rust
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch18-00-patterns/" class="md-tabs__link md-tabs__link--active">
+        Advanced Topics
+      </a>
+    </li>
+  
+
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="The Rust Programming Language" class="md-nav__button md-logo" aria-label="The Rust Programming Language" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    The Rust Programming Language
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kkoshin/rust-lang-book" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rust-lang-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          The Rust Programming Language
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="The Rust Programming Language" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          The Rust Programming Language
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foreword/" class="md-nav__link">
+        Foreword
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch00-00-introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-00-getting-started/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-01-installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-02-hello-world/" class="md-nav__link">
+        Hello, World!
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-03-hello-cargo/" class="md-nav__link">
+        Hello, Cargo!
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch02-00-guessing-game-tutorial/" class="md-nav__link">
+        Programming a Guessing Game
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_6" type="checkbox" id="__nav_2_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_6">
+          Common Programming Concepts
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Common Programming Concepts" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_6">
+          <span class="md-nav__icon md-icon"></span>
+          Common Programming Concepts
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-00-common-programming-concepts/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-01-variables-and-mutability/" class="md-nav__link">
+        Variables and Mutability
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-02-data-types/" class="md-nav__link">
+        Data Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-03-how-functions-work/" class="md-nav__link">
+        Functions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-04-comments/" class="md-nav__link">
+        Comments
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-05-control-flow/" class="md-nav__link">
+        Control Flow
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_7" type="checkbox" id="__nav_2_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_7">
+          Understanding Ownership
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Understanding Ownership" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_7">
+          <span class="md-nav__icon md-icon"></span>
+          Understanding Ownership
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-00-understanding-ownership/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-01-what-is-ownership/" class="md-nav__link">
+        What is Ownership?
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-02-references-and-borrowing/" class="md-nav__link">
+        References and Borrowing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-03-slices/" class="md-nav__link">
+        The Slice Type
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_8" type="checkbox" id="__nav_2_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_8">
+          Using Structs to Structure Related Data
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Using Structs to Structure Related Data" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_8">
+          <span class="md-nav__icon md-icon"></span>
+          Using Structs to Structure Related Data
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-00-structs/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-01-defining-structs/" class="md-nav__link">
+        Defining and Instantiating Structs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-02-example-structs/" class="md-nav__link">
+        An Example Program Using Structs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-03-method-syntax/" class="md-nav__link">
+        Method Syntax
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_9" type="checkbox" id="__nav_2_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_9">
+          Enums and Pattern Matching
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Enums and Pattern Matching" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_9">
+          <span class="md-nav__icon md-icon"></span>
+          Enums and Pattern Matching
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-00-enums/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-01-defining-an-enum/" class="md-nav__link">
+        Defining an Enum
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-02-match/" class="md-nav__link">
+        The `match` Control Flow Construct
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-03-if-let/" class="md-nav__link">
+        Concise Control Flow with `if let`
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Basic Rust Literacy
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Basic Rust Literacy" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Basic Rust Literacy
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          Managing Growing Projects with Packages, Crates, and Modules
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Managing Growing Projects with Packages, Crates, and Modules" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Managing Growing Projects with Packages, Crates, and Modules
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-00-managing-growing-projects-with-packages-crates-and-modules/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-01-packages-and-crates/" class="md-nav__link">
+        Packages and Crates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-02-defining-modules-to-control-scope-and-privacy/" class="md-nav__link">
+        Defining Modules to Control Scope and Privacy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-03-paths-for-referring-to-an-item-in-the-module-tree/" class="md-nav__link">
+        Paths for Referring to an Item in the Module Tree
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-04-bringing-paths-into-scope-with-the-use-keyword/" class="md-nav__link">
+        Bringing Paths Into Scope with the `use` Keyword
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-05-separating-modules-into-different-files/" class="md-nav__link">
+        Separating Modules into Different Files
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2">
+          Common Collections
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Common Collections" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Common Collections
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-00-common-collections/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-01-vectors/" class="md-nav__link">
+        Storing Lists of Values with Vectors
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-02-strings/" class="md-nav__link">
+        Storing UTF-8 Encoded Text with Strings
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-03-hash-maps/" class="md-nav__link">
+        Storing Keys with Associated Values in Hash Maps
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_3" type="checkbox" id="__nav_3_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_3">
+          Error Handling
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Error Handling" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          Error Handling
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-00-error-handling/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-01-unrecoverable-errors-with-panic/" class="md-nav__link">
+        Unrecoverable Errors with `panic!`
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-02-recoverable-errors-with-result/" class="md-nav__link">
+        Recoverable Errors with `Result`
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-03-to-panic-or-not-to-panic/" class="md-nav__link">
+        To `panic!` or Not to `panic!`
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_4" type="checkbox" id="__nav_3_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_4">
+          Generic Types, Traits, and Lifetimes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Generic Types, Traits, and Lifetimes" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          Generic Types, Traits, and Lifetimes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-00-generics/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-01-syntax/" class="md-nav__link">
+        Generic Data Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-02-traits/" class="md-nav__link">
+        Traits: Defining Shared Behavior
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-03-lifetime-syntax/" class="md-nav__link">
+        Validating References with Lifetimes
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_5" type="checkbox" id="__nav_3_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_5">
+          Writing Automated Tests
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Writing Automated Tests" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_5">
+          <span class="md-nav__icon md-icon"></span>
+          Writing Automated Tests
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11-00-testing/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11-01-writing-tests/" class="md-nav__link">
+        How to Write Tests
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11-02-running-tests/" class="md-nav__link">
+        Controlling How Tests Are Run
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11-03-test-organization/" class="md-nav__link">
+        Test Organization
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_6">
+          An I/O Project: Building a Command Line Program
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="An I/O Project: Building a Command Line Program" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_6">
+          <span class="md-nav__icon md-icon"></span>
+          An I/O Project: Building a Command Line Program
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-00-an-io-project/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-01-accepting-command-line-arguments/" class="md-nav__link">
+        Accepting Command Line Arguments
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-02-reading-a-file/" class="md-nav__link">
+        Reading a File
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-03-improving-error-handling-and-modularity/" class="md-nav__link">
+        Refactoring to Improve Modularity and Error Handling
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-04-testing-the-librarys-functionality/" class="md-nav__link">
+        Developing the Library’s Functionality with Test Driven Development
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-05-working-with-environment-variables/" class="md-nav__link">
+        Working with Environment Variables
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-06-writing-to-stderr-instead-of-stdout/" class="md-nav__link">
+        Writing Error Messages to Standard Error Instead of Standard Output
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Thinking in Rust
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Thinking in Rust" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Thinking in Rust
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Functional Language Features: Iterators and Closures
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Functional Language Features: Iterators and Closures" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Functional Language Features: Iterators and Closures
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-00-functional-features/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-01-closures/" class="md-nav__link">
+        Closures: Anonymous Functions that Capture Their Environment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-02-iterators/" class="md-nav__link">
+        Processing a Series of Items with Iterators
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-03-improving-our-io-project/" class="md-nav__link">
+        Improving Our I/O Project
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-04-performance/" class="md-nav__link">
+        Comparing Performance: Loops vs. Iterators
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2" type="checkbox" id="__nav_4_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_2">
+          More about Cargo and Crates.io
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="More about Cargo and Crates.io" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          More about Cargo and Crates.io
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-00-more-about-cargo/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-01-release-profiles/" class="md-nav__link">
+        Customizing Builds with Release Profiles
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-02-publishing-to-crates-io/" class="md-nav__link">
+        Publishing a Crate to Crates.io
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-03-cargo-workspaces/" class="md-nav__link">
+        Cargo Workspaces
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-04-installing-binaries/" class="md-nav__link">
+        Installing Binaries from Crates.io with `cargo install`
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-05-extending-cargo/" class="md-nav__link">
+        Extending Cargo with Custom Commands
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3" type="checkbox" id="__nav_4_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3">
+          Smart Pointers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Smart Pointers" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_3">
+          <span class="md-nav__icon md-icon"></span>
+          Smart Pointers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-00-smart-pointers/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-01-box/" class="md-nav__link">
+        Using `Box<T>` to Point to Data on the Heap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-02-deref/" class="md-nav__link">
+        Treating Smart Pointers Like Regular References with the `Deref` Trait
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-03-drop/" class="md-nav__link">
+        Running Code on Cleanup with the `Drop` Trait
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-04-rc/" class="md-nav__link">
+        `Rc<T>`, the Reference Counted Smart Pointer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-05-interior-mutability/" class="md-nav__link">
+        `RefCell<T>` and the Interior Mutability Pattern
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-06-reference-cycles/" class="md-nav__link">
+        Reference Cycles Can Leak Memory
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_4" type="checkbox" id="__nav_4_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_4">
+          Fearless Concurrency
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Fearless Concurrency" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_4">
+          <span class="md-nav__icon md-icon"></span>
+          Fearless Concurrency
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-00-concurrency/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-01-threads/" class="md-nav__link">
+        Using Threads to Run Code Simultaneously
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-02-message-passing/" class="md-nav__link">
+        Using Message Passing to Transfer Data Between Threads
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-03-shared-state/" class="md-nav__link">
+        Shared-State Concurrency
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-04-extensible-concurrency-sync-and-send/" class="md-nav__link">
+        Extensible Concurrency with the `Sync` and `Send` Traits
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5">
+          Object Oriented Programming Features of Rust
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Object Oriented Programming Features of Rust" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_5">
+          <span class="md-nav__icon md-icon"></span>
+          Object Oriented Programming Features of Rust
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-00-oop/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-01-what-is-oo/" class="md-nav__link">
+        Characteristics of Object-Oriented Languages
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-02-trait-objects/" class="md-nav__link">
+        Using Trait Objects That Allow for Values of Different Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-03-oo-design-patterns/" class="md-nav__link">
+        Implementing an Object-Oriented Design Pattern
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Advanced Topics
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Advanced Topics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced Topics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_1" type="checkbox" id="__nav_5_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_1">
+          Patterns and Matching
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Patterns and Matching" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_1">
+          <span class="md-nav__icon md-icon"></span>
+          Patterns and Matching
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-00-patterns/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-01-all-the-places-for-patterns/" class="md-nav__link">
+        All the Places Patterns Can Be Used
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-02-refutability/" class="md-nav__link">
+        Refutability: Whether a Pattern Might Fail to Match
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-03-pattern-syntax/" class="md-nav__link">
+        Pattern Syntax
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2" type="checkbox" id="__nav_5_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_2">
+          Advanced Features
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Advanced Features" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced Features
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-00-advanced-features/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Unsafe Rust
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Unsafe Rust
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#unsafe-rust" class="md-nav__link">
+    Unsafe Rust
+  </a>
+  
+    <nav class="md-nav" aria-label="Unsafe Rust">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unsafe-superpowers" class="md-nav__link">
+    Unsafe Superpowers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dereferencing-a-raw-pointer" class="md-nav__link">
+    Dereferencing a Raw Pointer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-an-unsafe-function-or-method" class="md-nav__link">
+    Calling an Unsafe Function or Method
+  </a>
+  
+    <nav class="md-nav" aria-label="Calling an Unsafe Function or Method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-safe-abstraction-over-unsafe-code" class="md-nav__link">
+    Creating a Safe Abstraction over Unsafe Code
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-extern-functions-to-call-external-code" class="md-nav__link">
+    Using extern Functions to Call External Code
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-rust-functions-from-other-languages" class="md-nav__link">
+    Calling Rust Functions from Other Languages
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessing-or-modifying-a-mutable-static-variable" class="md-nav__link">
+    Accessing or Modifying a Mutable Static Variable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementing-an-unsafe-trait" class="md-nav__link">
+    Implementing an Unsafe Trait
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessing-fields-of-a-union" class="md-nav__link">
+    Accessing Fields of a Union
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-unsafe-code" class="md-nav__link">
+    When to Use Unsafe Code
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-03-advanced-traits/" class="md-nav__link">
+        Advanced Traits
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-04-advanced-types/" class="md-nav__link">
+        Advanced Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-05-advanced-functions-and-closures/" class="md-nav__link">
+        Advanced Functions and Closures
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-06-macros/" class="md-nav__link">
+        Macros
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_3" type="checkbox" id="__nav_5_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_3">
+          Final Project: Building a Multithreaded Web Server
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Final Project: Building a Multithreaded Web Server" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_3">
+          <span class="md-nav__icon md-icon"></span>
+          Final Project: Building a Multithreaded Web Server
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-00-final-project-a-web-server/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-01-single-threaded/" class="md-nav__link">
+        Building a Single-Threaded Web Server
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-02-multithreaded/" class="md-nav__link">
+        Turning Our Single-Threaded Server into a Multithreaded Server
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-03-graceful-shutdown-and-cleanup/" class="md-nav__link">
+        Graceful Shutdown and Cleanup
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_4" type="checkbox" id="__nav_5_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_4">
+          Appendix
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Appendix" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_4">
+          <span class="md-nav__icon md-icon"></span>
+          Appendix
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-00/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-01-keywords/" class="md-nav__link">
+        A - Keywords
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-02-operators/" class="md-nav__link">
+        B - Operators and Symbols
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-03-derivable-traits/" class="md-nav__link">
+        C - Derivable Traits
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-04-useful-development-tools/" class="md-nav__link">
+        D - Useful Development Tools
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-05-editions/" class="md-nav__link">
+        E - Editions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-06-translation/" class="md-nav__link">
+        F - Translations of the Book
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-07-nightly-rust/" class="md-nav__link">
+        G - How Rust is Made and “Nightly Rust”
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#unsafe-rust" class="md-nav__link">
+    Unsafe Rust
+  </a>
+  
+    <nav class="md-nav" aria-label="Unsafe Rust">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unsafe-superpowers" class="md-nav__link">
+    Unsafe Superpowers
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dereferencing-a-raw-pointer" class="md-nav__link">
+    Dereferencing a Raw Pointer
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-an-unsafe-function-or-method" class="md-nav__link">
+    Calling an Unsafe Function or Method
+  </a>
+  
+    <nav class="md-nav" aria-label="Calling an Unsafe Function or Method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-safe-abstraction-over-unsafe-code" class="md-nav__link">
+    Creating a Safe Abstraction over Unsafe Code
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-extern-functions-to-call-external-code" class="md-nav__link">
+    Using extern Functions to Call External Code
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#calling-rust-functions-from-other-languages" class="md-nav__link">
+    Calling Rust Functions from Other Languages
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessing-or-modifying-a-mutable-static-variable" class="md-nav__link">
+    Accessing or Modifying a Mutable Static Variable
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementing-an-unsafe-trait" class="md-nav__link">
+    Implementing an Unsafe Trait
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessing-fields-of-a-union" class="md-nav__link">
+    Accessing Fields of a Union
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-unsafe-code" class="md-nav__link">
+    When to Use Unsafe Code
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+  <a href="https://github.com/kkoshin/rust-lang-book/edit/main/src/ch19-01-unsafe-rust.md" title="Edit this page" class="md-content__button md-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+
+  <h1>Unsafe Rust</h1>
+
+<h2 id="unsafe-rust">Unsafe Rust</h2>
+<p>All the code we’ve discussed so far has had Rust’s memory safety guarantees
+enforced at compile time. However, Rust has a second language hidden inside it
+that doesn’t enforce these memory safety guarantees: it’s called <em>unsafe Rust</em>
+and works just like regular Rust, but gives us extra superpowers.</p>
+<p>Unsafe Rust exists because, by nature, static analysis is conservative. When
+the compiler tries to determine whether or not code upholds the guarantees,
+it’s better for it to reject some valid programs than to accept some invalid
+programs. Although the code <em>might</em> be okay, if the Rust compiler doesn’t have
+enough information to be confident, it will reject the code. In these cases,
+you can use unsafe code to tell the compiler, “Trust me, I know what I’m
+doing.” Be warned, however, that you use unsafe Rust at your own risk: if you
+use unsafe code incorrectly, problems can occur due to memory unsafety, such as
+null pointer dereferencing.</p>
+<p>Another reason Rust has an unsafe alter ego is that the underlying computer
+hardware is inherently unsafe. If Rust didn’t let you do unsafe operations, you
+couldn’t do certain tasks. Rust needs to allow you to do low-level systems
+programming, such as directly interacting with the operating system or even
+writing your own operating system. Working with low-level systems programming
+is one of the goals of the language. Let’s explore what we can do with unsafe
+Rust and how to do it.</p>
+<h3 id="unsafe-superpowers">Unsafe Superpowers</h3>
+<p>To switch to unsafe Rust, use the <code>unsafe</code> keyword and then start a new block
+that holds the unsafe code. You can take five actions in unsafe Rust that you
+can’t in safe Rust, which we call <em>unsafe superpowers</em>. Those superpowers
+include the ability to:</p>
+<ul>
+<li>Dereference a raw pointer</li>
+<li>Call an unsafe function or method</li>
+<li>Access or modify a mutable static variable</li>
+<li>Implement an unsafe trait</li>
+<li>Access fields of <code>union</code>s</li>
+</ul>
+<p>It’s important to understand that <code>unsafe</code> doesn’t turn off the borrow checker
+or disable any other of Rust’s safety checks: if you use a reference in unsafe
+code, it will still be checked. The <code>unsafe</code> keyword only gives you access to
+these five features that are then not checked by the compiler for memory
+safety. You’ll still get some degree of safety inside of an unsafe block.</p>
+<p>In addition, <code>unsafe</code> does not mean the code inside the block is necessarily
+dangerous or that it will definitely have memory safety problems: the intent is
+that as the programmer, you’ll ensure the code inside an <code>unsafe</code> block will
+access memory in a valid way.</p>
+<p>People are fallible, and mistakes will happen, but by requiring these five
+unsafe operations to be inside blocks annotated with <code>unsafe</code> you’ll know that
+any errors related to memory safety must be within an <code>unsafe</code> block. Keep
+<code>unsafe</code> blocks small; you’ll be thankful later when you investigate memory
+bugs.</p>
+<p>To isolate unsafe code as much as possible, it’s best to enclose unsafe code
+within a safe abstraction and provide a safe API, which we’ll discuss later in
+the chapter when we examine unsafe functions and methods. Parts of the standard
+library are implemented as safe abstractions over unsafe code that has been
+audited. Wrapping unsafe code in a safe abstraction prevents uses of <code>unsafe</code>
+from leaking out into all the places that you or your users might want to use
+the functionality implemented with <code>unsafe</code> code, because using a safe
+abstraction is safe.</p>
+<p>Let’s look at each of the five unsafe superpowers in turn. We’ll also look at
+some abstractions that provide a safe interface to unsafe code.</p>
+<h3 id="dereferencing-a-raw-pointer">Dereferencing a Raw Pointer</h3>
+<p>In Chapter 4, in the <a href="ch04-02-references-and-borrowing.html#dangling-references">“Dangling References”</a><!-- ignore
+--> section, we mentioned that the compiler ensures references are always
+valid. Unsafe Rust has two new types called <em>raw pointers</em> that are similar to
+references. As with references, raw pointers can be immutable or mutable and
+are written as <code>*const T</code> and <code>*mut T</code>, respectively. The asterisk isn’t the
+dereference operator; it’s part of the type name. In the context of raw
+pointers, <em>immutable</em> means that the pointer can’t be directly assigned to
+after being dereferenced.</p>
+<p>Different from references and smart pointers, raw pointers:</p>
+<ul>
+<li>Are allowed to ignore the borrowing rules by having both immutable and
+  mutable pointers or multiple mutable pointers to the same location</li>
+<li>Aren’t guaranteed to point to valid memory</li>
+<li>Are allowed to be null</li>
+<li>Don’t implement any automatic cleanup</li>
+</ul>
+<p>By opting out of having Rust enforce these guarantees, you can give up
+guaranteed safety in exchange for greater performance or the ability to
+interface with another language or hardware where Rust’s guarantees don’t apply.</p>
+<p>Listing 19-1 shows how to create an immutable and a mutable raw pointer from
+references.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">01</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 19-1: Creating raw pointers from references</span></p>
+<p>Notice that we don’t include the <code>unsafe</code> keyword in this code. We can create
+raw pointers in safe code; we just can’t dereference raw pointers outside an
+unsafe block, as you’ll see in a bit.</p>
+<p>We’ve created raw pointers by using <code>as</code> to cast an immutable and a mutable
+reference into their corresponding raw pointer types. Because we created them
+directly from references guaranteed to be valid, we know these particular raw
+pointers are valid, but we can’t make that assumption about just any raw
+pointer.</p>
+<p>To demonstrate this, next we’ll create a raw pointer whose validity we can’t be
+so certain of. Listing 19-2 shows how to create a raw pointer to an arbitrary
+location in memory. Trying to use arbitrary memory is undefined: there might be
+data at that address or there might not, the compiler might optimize the code
+so there is no memory access, or the program might error with a segmentation
+fault. Usually, there is no good reason to write code like this, but it is
+possible.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">02</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 19-2: Creating a raw pointer to an arbitrary
+memory address</span></p>
+<p>Recall that we can create raw pointers in safe code, but we can’t <em>dereference</em>
+raw pointers and read the data being pointed to. In Listing 19-3, we use the
+dereference operator <code>*</code> on a raw pointer that requires an <code>unsafe</code> block.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">03</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 19-3: Dereferencing raw pointers within an
+<code>unsafe</code> block</span></p>
+<p>Creating a pointer does no harm; it’s only when we try to access the value that
+it points at that we might end up dealing with an invalid value.</p>
+<p>Note also that in Listing 19-1 and 19-3, we created <code>*const i32</code> and <code>*mut i32</code>
+raw pointers that both pointed to the same memory location, where <code>num</code> is
+stored. If we instead tried to create an immutable and a mutable reference to
+<code>num</code>, the code would not have compiled because Rust’s ownership rules don’t
+allow a mutable reference at the same time as any immutable references. With
+raw pointers, we can create a mutable pointer and an immutable pointer to the
+same location and change data through the mutable pointer, potentially creating
+a data race. Be careful!</p>
+<p>With all of these dangers, why would you ever use raw pointers? One major use
+case is when interfacing with C code, as you’ll see in the next section,
+<a href="#calling-an-unsafe-function-or-method">“Calling an Unsafe Function or
+Method.”</a><!-- ignore --> Another case is
+when building up safe abstractions that the borrow checker doesn’t understand.
+We’ll introduce unsafe functions and then look at an example of a safe
+abstraction that uses unsafe code.</p>
+<h3 id="calling-an-unsafe-function-or-method">Calling an Unsafe Function or Method</h3>
+<p>The second type of operation you can perform in an unsafe block is calling
+unsafe functions. Unsafe functions and methods look exactly like regular
+functions and methods, but they have an extra <code>unsafe</code> before the rest of the
+definition. The <code>unsafe</code> keyword in this context indicates the function has
+requirements we need to uphold when we call this function, because Rust can’t
+guarantee we’ve met these requirements. By calling an unsafe function within an
+<code>unsafe</code> block, we’re saying that we’ve read this function’s documentation and
+take responsibility for upholding the function’s contracts.</p>
+<p>Here is an unsafe function named <code>dangerous</code> that doesn’t do anything in its
+body:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="k">unsafe</span><span class="o">-</span><span class="k">fn</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>We must call the <code>dangerous</code> function within a separate <code>unsafe</code> block. If we
+try to call <code>dangerous</code> without the <code>unsafe</code> block, we’ll get an error:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="go">{{#include ../listings/ch19-advanced-features/output-only-01-missing-unsafe/output.txt}}</span>
+</code></pre></div>
+<p>With the <code>unsafe</code> block, we’re asserting to Rust that we’ve read the function’s
+documentation, we understand how to use it properly, and we’ve verified that
+we’re fulfilling the contract of the function.</p>
+<p>Bodies of unsafe functions are effectively <code>unsafe</code> blocks, so to perform other
+unsafe operations within an unsafe function, we don’t need to add another
+<code>unsafe</code> block.</p>
+<h4 id="creating-a-safe-abstraction-over-unsafe-code">Creating a Safe Abstraction over Unsafe Code</h4>
+<p>Just because a function contains unsafe code doesn’t mean we need to mark the
+entire function as unsafe. In fact, wrapping unsafe code in a safe function is
+a common abstraction. As an example, let’s study the <code>split_at_mut</code> function
+from the standard library, which requires some unsafe code. We’ll explore how
+we might implement it. This safe method is defined on mutable slices: it takes
+one slice and makes it two by splitting the slice at the index given as an
+argument. Listing 19-4 shows how to use <code>split_at_mut</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">04</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 19-4: Using the safe <code>split_at_mut</code>
+function</span></p>
+<p>We can’t implement this function using only safe Rust. An attempt might look
+something like Listing 19-5, which won’t compile. For simplicity, we’ll
+implement <code>split_at_mut</code> as a function rather than a method and only for slices
+of <code>i32</code> values rather than for a generic type <code>T</code>.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">05</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 19-5: An attempted implementation of
+<code>split_at_mut</code> using only safe Rust</span></p>
+<p>This function first gets the total length of the slice. Then it asserts that
+the index given as a parameter is within the slice by checking whether it’s
+less than or equal to the length. The assertion means that if we pass an index
+that is greater than the length to split the slice at, the function will panic
+before it attempts to use that index.</p>
+<p>Then we return two mutable slices in a tuple: one from the start of the
+original slice to the <code>mid</code> index and another from <code>mid</code> to the end of the
+slice.</p>
+<p>When we try to compile the code in Listing 19-5, we’ll get an error.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="go">{{#include ../listings/ch19-advanced-features/listing-19-05/output.txt}}</span>
+</code></pre></div>
+<p>Rust’s borrow checker can’t understand that we’re borrowing different parts of
+the slice; it only knows that we’re borrowing from the same slice twice.
+Borrowing different parts of a slice is fundamentally okay because the two
+slices aren’t overlapping, but Rust isn’t smart enough to know this. When we
+know code is okay, but Rust doesn’t, it’s time to reach for unsafe code.</p>
+<p>Listing 19-6 shows how to use an <code>unsafe</code> block, a raw pointer, and some calls
+to unsafe functions to make the implementation of <code>split_at_mut</code> work.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">06</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 19-6: Using unsafe code in the implementation of
+the <code>split_at_mut</code> function</span></p>
+<p>Recall from <a href="ch04-03-slices.html#the-slice-type">“The Slice Type”</a><!-- ignore --> section in
+Chapter 4 that slices are a pointer to some data and the length of the slice.
+We use the <code>len</code> method to get the length of a slice and the <code>as_mut_ptr</code>
+method to access the raw pointer of a slice. In this case, because we have a
+mutable slice to <code>i32</code> values, <code>as_mut_ptr</code> returns a raw pointer with the type
+<code>*mut i32</code>, which we’ve stored in the variable <code>ptr</code>.</p>
+<p>We keep the assertion that the <code>mid</code> index is within the slice. Then we get to
+the unsafe code: the <code>slice::from_raw_parts_mut</code> function takes a raw pointer
+and a length, and it creates a slice. We use this function to create a slice
+that starts from <code>ptr</code> and is <code>mid</code> items long. Then we call the <code>add</code>
+method on <code>ptr</code> with <code>mid</code> as an argument to get a raw pointer that starts at
+<code>mid</code>, and we create a slice using that pointer and the remaining number of
+items after <code>mid</code> as the length.</p>
+<p>The function <code>slice::from_raw_parts_mut</code> is unsafe because it takes a raw
+pointer and must trust that this pointer is valid. The <code>add</code> method on raw
+pointers is also unsafe, because it must trust that the offset location is also
+a valid pointer. Therefore, we had to put an <code>unsafe</code> block around our calls to
+<code>slice::from_raw_parts_mut</code> and <code>add</code> so we could call them. By looking at
+the code and by adding the assertion that <code>mid</code> must be less than or equal to
+<code>len</code>, we can tell that all the raw pointers used within the <code>unsafe</code> block
+will be valid pointers to data within the slice. This is an acceptable and
+appropriate use of <code>unsafe</code>.</p>
+<p>Note that we don’t need to mark the resulting <code>split_at_mut</code> function as
+<code>unsafe</code>, and we can call this function from safe Rust. We’ve created a safe
+abstraction to the unsafe code with an implementation of the function that uses
+<code>unsafe</code> code in a safe way, because it creates only valid pointers from the
+data this function has access to.</p>
+<p>In contrast, the use of <code>slice::from_raw_parts_mut</code> in Listing 19-7 would
+likely crash when the slice is used. This code takes an arbitrary memory
+location and creates a slice 10,000 items long.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">07</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 19-7: Creating a slice from an arbitrary memory
+location</span></p>
+<p>We don’t own the memory at this arbitrary location, and there is no guarantee
+that the slice this code creates contains valid <code>i32</code> values. Attempting to use
+<code>values</code> as though it’s a valid slice results in undefined behavior.</p>
+<h4 id="using-extern-functions-to-call-external-code">Using <code>extern</code> Functions to Call External Code</h4>
+<p>Sometimes, your Rust code might need to interact with code written in another
+language. For this, Rust has the keyword <code>extern</code> that facilitates the creation
+and use of a <em>Foreign Function Interface (FFI)</em>. An FFI is a way for a
+programming language to define functions and enable a different (foreign)
+programming language to call those functions.</p>
+<p>Listing 19-8 demonstrates how to set up an integration with the <code>abs</code> function
+from the C standard library. Functions declared within <code>extern</code> blocks are
+always unsafe to call from Rust code. The reason is that other languages don’t
+enforce Rust’s rules and guarantees, and Rust can’t check them, so
+responsibility falls on the programmer to ensure safety.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">08</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 19-8: Declaring and calling an <code>extern</code> function
+defined in another language</span></p>
+<p>Within the <code>extern "C"</code> block, we list the names and signatures of external
+functions from another language we want to call. The <code>"C"</code> part defines which
+<em>application binary interface (ABI)</em> the external function uses: the ABI
+defines how to call the function at the assembly level. The <code>"C"</code> ABI is the
+most common and follows the C programming language’s ABI.</p>
+<blockquote>
+<h4 id="calling-rust-functions-from-other-languages">Calling Rust Functions from Other Languages</h4>
+<p>We can also use <code>extern</code> to create an interface that allows other languages
+to call Rust functions. Instead of creating a whole <code>extern</code> block, we add
+the <code>extern</code> keyword and specify the ABI to use just before the <code>fn</code> keyword
+for the relevant function. We also need to add a <code>#[no_mangle]</code> annotation to
+tell the Rust compiler not to mangle the name of this function. <em>Mangling</em> is
+when a compiler changes the name we’ve given a function to a different name
+that contains more information for other parts of the compilation process to
+consume but is less human readable. Every programming language compiler
+mangles names slightly differently, so for a Rust function to be nameable by
+other languages, we must disable the Rust compiler’s name mangling.</p>
+<p>In the following example, we make the <code>call_from_c</code> function accessible from
+C code, after it’s compiled to a shared library and linked from C:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="cp">#[no_mangle]</span><span class="w"></span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">pub</span><span class="w"> </span><span class="k">extern</span><span class="w"> </span><span class="s">&quot;C&quot;</span><span class="w"> </span><span class="k">fn</span> <span class="nf">call_from_c</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Just called a Rust function from C!&quot;</span><span class="p">);</span><span class="w"></span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<p>This usage of <code>extern</code> does not require <code>unsafe</code>.</p>
+</blockquote>
+<h3 id="accessing-or-modifying-a-mutable-static-variable">Accessing or Modifying a Mutable Static Variable</h3>
+<p>In this book, we’ve not yet talked about <em>global variables</em>, which Rust does
+support but can be problematic with Rust’s ownership rules. If two threads are
+accessing the same mutable global variable, it can cause a data race.</p>
+<p>In Rust, global variables are called <em>static</em> variables. Listing 19-9 shows an
+example declaration and use of a static variable with a string slice as a
+value.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">09</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 19-9: Defining and using an immutable static
+variable</span></p>
+<p>Static variables are similar to constants, which we discussed in the
+<a href="ch03-01-variables-and-mutability.html#constants">“Differences Between Variables and
+Constants”</a><!-- ignore --> section
+in Chapter 3. The names of static variables are in <code>SCREAMING_SNAKE_CASE</code> by
+convention. Static variables can only store references with the <code>'static</code>
+lifetime, which means the Rust compiler can figure out the lifetime and we
+aren’t required to annotate it explicitly. Accessing an immutable static
+variable is safe.</p>
+<p>A subtle difference between constants and immutable static variables is that
+values in a static variable have a fixed address in memory. Using the value
+will always access the same data. Constants, on the other hand, are allowed to
+duplicate their data whenever they’re used. Another difference is that static
+variables can be mutable. Accessing and modifying mutable static variables is
+<em>unsafe</em>. Listing 19-10 shows how to declare, access, and modify a mutable
+static variable named <code>COUNTER</code>.</p>
+<p><span class="filename">Filename: src/main.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">10</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 19-10: Reading from or writing to a mutable
+static variable is unsafe</span></p>
+<p>As with regular variables, we specify mutability using the <code>mut</code> keyword. Any
+code that reads or writes from <code>COUNTER</code> must be within an <code>unsafe</code> block. This
+code compiles and prints <code>COUNTER: 3</code> as we would expect because it’s single
+threaded. Having multiple threads access <code>COUNTER</code> would likely result in data
+races.</p>
+<p>With mutable data that is globally accessible, it’s difficult to ensure there
+are no data races, which is why Rust considers mutable static variables to be
+unsafe. Where possible, it’s preferable to use the concurrency techniques and
+thread-safe smart pointers we discussed in Chapter 16 so the compiler checks
+that data accessed from different threads is done safely.</p>
+<h3 id="implementing-an-unsafe-trait">Implementing an Unsafe Trait</h3>
+<p>We can use <code>unsafe</code> to implement an unsafe trait. A trait is unsafe when at
+least one of its methods has some invariant that the compiler can’t verify. We
+declare that a trait is <code>unsafe</code> by adding the <code>unsafe</code> keyword before <code>trait</code>
+and marking the implementation of the trait as <code>unsafe</code> too, as shown in
+Listing 19-11.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch19</span><span class="o">-</span><span class="n">advanced</span><span class="o">-</span><span class="n">features</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">19</span><span class="o">-</span><span class="mi">11</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 19-11: Defining and implementing an unsafe
+trait</span></p>
+<p>By using <code>unsafe impl</code>, we’re promising that we’ll uphold the invariants that
+the compiler can’t verify.</p>
+<p>As an example, recall the <code>Sync</code> and <code>Send</code> marker traits we discussed in the
+<a href="ch16-04-extensible-concurrency-sync-and-send.html#extensible-concurrency-with-the-sync-and-send-traits">“Extensible Concurrency with the <code>Sync</code> and <code>Send</code>
+Traits”</a><!-- ignore -->
+section in Chapter 16: the compiler implements these traits automatically if
+our types are composed entirely of <code>Send</code> and <code>Sync</code> types. If we implement a
+type that contains a type that is not <code>Send</code> or <code>Sync</code>, such as raw pointers,
+and we want to mark that type as <code>Send</code> or <code>Sync</code>, we must use <code>unsafe</code>. Rust
+can’t verify that our type upholds the guarantees that it can be safely sent
+across threads or accessed from multiple threads; therefore, we need to do
+those checks manually and indicate as such with <code>unsafe</code>.</p>
+<h3 id="accessing-fields-of-a-union">Accessing Fields of a Union</h3>
+<p>The final action that works only with <code>unsafe</code> is accessing fields of a
+<em>union</em>. A <code>union</code> is similar to a <code>struct</code>, but only one declared field is
+used in a particular instance at one time. Unions are primarily used to
+interface with unions in C code. Accessing union fields is unsafe because Rust
+can’t guarantee the type of the data currently being stored in the union
+instance. You can learn more about unions in <a href="../reference/items/unions.html">the Rust Reference</a>.</p>
+<h3 id="when-to-use-unsafe-code">When to Use Unsafe Code</h3>
+<p>Using <code>unsafe</code> to take one of the five actions (superpowers) just discussed
+isn’t wrong or even frowned upon. But it is trickier to get <code>unsafe</code> code
+correct because the compiler can’t help uphold memory safety. When you have a
+reason to use <code>unsafe</code> code, you can do so, and having the explicit <code>unsafe</code>
+annotation makes it easier to track down the source of problems when they occur.</p>
+
+  <hr>
+<div class="md-source-file">
+  <small>
+    
+      Last update:
+      2022-07-25
+    
+  </small>
+</div>
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../ch19-00-advanced-features/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Overview" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Overview
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../ch19-03-advanced-traits/" class="md-footer__link md-footer__link--next" aria-label="Next: Advanced Traits" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Advanced Traits
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2022 Rust
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top", "navigation.tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>
+      
+    
+  </body>
+</html>

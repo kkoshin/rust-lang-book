@@ -1,0 +1,3209 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+        <meta name="author" content="rust-lang">
+      
+      
+        <link rel="canonical" href="https://kkoshin.github.io/rust-lang-book/ch10-02-traits/">
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.3.9">
+    
+    
+      
+        <title>Traits: Defining Shared Behavior - The Rust Programming Language</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.1d29e8d0.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-orange" data-md-color-accent="pink">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#traits-defining-shared-behavior" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="The Rust Programming Language" class="md-header__button md-logo" aria-label="The Rust Programming Language" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            The Rust Programming Language
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Traits: Defining Shared Behavior
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="deep-orange" data-md-color-accent="pink"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/kkoshin/rust-lang-book" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rust-lang-book
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        The Rust Programming Language
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch01-00-getting-started/" class="md-tabs__link">
+        Getting Started
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch07-00-managing-growing-projects-with-packages-crates-and-modules/" class="md-tabs__link md-tabs__link--active">
+        Basic Rust Literacy
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch13-00-functional-features/" class="md-tabs__link">
+        Thinking in Rust
+      </a>
+    </li>
+  
+
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../ch18-00-patterns/" class="md-tabs__link">
+        Advanced Topics
+      </a>
+    </li>
+  
+
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="The Rust Programming Language" class="md-nav__button md-logo" aria-label="The Rust Programming Language" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    The Rust Programming Language
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/kkoshin/rust-lang-book" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    rust-lang-book
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_1" type="checkbox" id="__nav_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_1">
+          The Rust Programming Language
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="The Rust Programming Language" data-md-level="1">
+        <label class="md-nav__title" for="__nav_1">
+          <span class="md-nav__icon md-icon"></span>
+          The Rust Programming Language
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../foreword/" class="md-nav__link">
+        Foreword
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch00-00-introduction/" class="md-nav__link">
+        Introduction
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Getting Started
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Getting Started" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Getting Started
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-00-getting-started/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-01-installation/" class="md-nav__link">
+        Installation
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-02-hello-world/" class="md-nav__link">
+        Hello, World!
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch01-03-hello-cargo/" class="md-nav__link">
+        Hello, Cargo!
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch02-00-guessing-game-tutorial/" class="md-nav__link">
+        Programming a Guessing Game
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_6" type="checkbox" id="__nav_2_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_6">
+          Common Programming Concepts
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Common Programming Concepts" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_6">
+          <span class="md-nav__icon md-icon"></span>
+          Common Programming Concepts
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-00-common-programming-concepts/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-01-variables-and-mutability/" class="md-nav__link">
+        Variables and Mutability
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-02-data-types/" class="md-nav__link">
+        Data Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-03-how-functions-work/" class="md-nav__link">
+        Functions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-04-comments/" class="md-nav__link">
+        Comments
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch03-05-control-flow/" class="md-nav__link">
+        Control Flow
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_7" type="checkbox" id="__nav_2_7" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_7">
+          Understanding Ownership
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Understanding Ownership" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_7">
+          <span class="md-nav__icon md-icon"></span>
+          Understanding Ownership
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-00-understanding-ownership/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-01-what-is-ownership/" class="md-nav__link">
+        What is Ownership?
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-02-references-and-borrowing/" class="md-nav__link">
+        References and Borrowing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch04-03-slices/" class="md-nav__link">
+        The Slice Type
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_8" type="checkbox" id="__nav_2_8" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_8">
+          Using Structs to Structure Related Data
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Using Structs to Structure Related Data" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_8">
+          <span class="md-nav__icon md-icon"></span>
+          Using Structs to Structure Related Data
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-00-structs/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-01-defining-structs/" class="md-nav__link">
+        Defining and Instantiating Structs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-02-example-structs/" class="md-nav__link">
+        An Example Program Using Structs
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch05-03-method-syntax/" class="md-nav__link">
+        Method Syntax
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_9" type="checkbox" id="__nav_2_9" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_9">
+          Enums and Pattern Matching
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Enums and Pattern Matching" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_9">
+          <span class="md-nav__icon md-icon"></span>
+          Enums and Pattern Matching
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-00-enums/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-01-defining-an-enum/" class="md-nav__link">
+        Defining an Enum
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-02-match/" class="md-nav__link">
+        The `match` Control Flow Construct
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch06-03-if-let/" class="md-nav__link">
+        Concise Control Flow with `if let`
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          Basic Rust Literacy
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Basic Rust Literacy" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          Basic Rust Literacy
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_1" type="checkbox" id="__nav_3_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_1">
+          Managing Growing Projects with Packages, Crates, and Modules
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Managing Growing Projects with Packages, Crates, and Modules" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_1">
+          <span class="md-nav__icon md-icon"></span>
+          Managing Growing Projects with Packages, Crates, and Modules
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-00-managing-growing-projects-with-packages-crates-and-modules/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-01-packages-and-crates/" class="md-nav__link">
+        Packages and Crates
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-02-defining-modules-to-control-scope-and-privacy/" class="md-nav__link">
+        Defining Modules to Control Scope and Privacy
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-03-paths-for-referring-to-an-item-in-the-module-tree/" class="md-nav__link">
+        Paths for Referring to an Item in the Module Tree
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-04-bringing-paths-into-scope-with-the-use-keyword/" class="md-nav__link">
+        Bringing Paths Into Scope with the `use` Keyword
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch07-05-separating-modules-into-different-files/" class="md-nav__link">
+        Separating Modules into Different Files
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_2" type="checkbox" id="__nav_3_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_2">
+          Common Collections
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Common Collections" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_2">
+          <span class="md-nav__icon md-icon"></span>
+          Common Collections
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-00-common-collections/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-01-vectors/" class="md-nav__link">
+        Storing Lists of Values with Vectors
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-02-strings/" class="md-nav__link">
+        Storing UTF-8 Encoded Text with Strings
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch08-03-hash-maps/" class="md-nav__link">
+        Storing Keys with Associated Values in Hash Maps
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_3" type="checkbox" id="__nav_3_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_3">
+          Error Handling
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Error Handling" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_3">
+          <span class="md-nav__icon md-icon"></span>
+          Error Handling
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-00-error-handling/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-01-unrecoverable-errors-with-panic/" class="md-nav__link">
+        Unrecoverable Errors with `panic!`
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-02-recoverable-errors-with-result/" class="md-nav__link">
+        Recoverable Errors with `Result`
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch09-03-to-panic-or-not-to-panic/" class="md-nav__link">
+        To `panic!` or Not to `panic!`
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_4" type="checkbox" id="__nav_3_4" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_4">
+          Generic Types, Traits, and Lifetimes
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Generic Types, Traits, and Lifetimes" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_4">
+          <span class="md-nav__icon md-icon"></span>
+          Generic Types, Traits, and Lifetimes
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-00-generics/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-01-syntax/" class="md-nav__link">
+        Generic Data Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Traits: Defining Shared Behavior
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Traits: Defining Shared Behavior
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#traits-defining-shared-behavior" class="md-nav__link">
+    Traits: Defining Shared Behavior
+  </a>
+  
+    <nav class="md-nav" aria-label="Traits: Defining Shared Behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defining-a-trait" class="md-nav__link">
+    Defining a Trait
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementing-a-trait-on-a-type" class="md-nav__link">
+    Implementing a Trait on a Type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-implementations" class="md-nav__link">
+    Default Implementations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traits-as-parameters" class="md-nav__link">
+    Traits as Parameters
+  </a>
+  
+    <nav class="md-nav" aria-label="Traits as Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trait-bound-syntax" class="md-nav__link">
+    Trait Bound Syntax
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specifying-multiple-trait-bounds-with-the-syntax" class="md-nav__link">
+    Specifying Multiple Trait Bounds with the + Syntax
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearer-trait-bounds-with-where-clauses" class="md-nav__link">
+    Clearer Trait Bounds with where Clauses
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returning-types-that-implement-traits" class="md-nav__link">
+    Returning Types that Implement Traits
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-trait-bounds-to-conditionally-implement-methods" class="md-nav__link">
+    Using Trait Bounds to Conditionally Implement Methods
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch10-03-lifetime-syntax/" class="md-nav__link">
+        Validating References with Lifetimes
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_5" type="checkbox" id="__nav_3_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_5">
+          Writing Automated Tests
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Writing Automated Tests" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_5">
+          <span class="md-nav__icon md-icon"></span>
+          Writing Automated Tests
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11-00-testing/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11-01-writing-tests/" class="md-nav__link">
+        How to Write Tests
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11-02-running-tests/" class="md-nav__link">
+        Controlling How Tests Are Run
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch11-03-test-organization/" class="md-nav__link">
+        Test Organization
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3_6" type="checkbox" id="__nav_3_6" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_3_6">
+          An I/O Project: Building a Command Line Program
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="An I/O Project: Building a Command Line Program" data-md-level="2">
+        <label class="md-nav__title" for="__nav_3_6">
+          <span class="md-nav__icon md-icon"></span>
+          An I/O Project: Building a Command Line Program
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-00-an-io-project/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-01-accepting-command-line-arguments/" class="md-nav__link">
+        Accepting Command Line Arguments
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-02-reading-a-file/" class="md-nav__link">
+        Reading a File
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-03-improving-error-handling-and-modularity/" class="md-nav__link">
+        Refactoring to Improve Modularity and Error Handling
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-04-testing-the-librarys-functionality/" class="md-nav__link">
+        Developing the Library’s Functionality with Test Driven Development
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-05-working-with-environment-variables/" class="md-nav__link">
+        Working with Environment Variables
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch12-06-writing-to-stderr-instead-of-stdout/" class="md-nav__link">
+        Writing Error Messages to Standard Error Instead of Standard Output
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          Thinking in Rust
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Thinking in Rust" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          Thinking in Rust
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_1" type="checkbox" id="__nav_4_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_1">
+          Functional Language Features: Iterators and Closures
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Functional Language Features: Iterators and Closures" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_1">
+          <span class="md-nav__icon md-icon"></span>
+          Functional Language Features: Iterators and Closures
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-00-functional-features/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-01-closures/" class="md-nav__link">
+        Closures: Anonymous Functions that Capture Their Environment
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-02-iterators/" class="md-nav__link">
+        Processing a Series of Items with Iterators
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-03-improving-our-io-project/" class="md-nav__link">
+        Improving Our I/O Project
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch13-04-performance/" class="md-nav__link">
+        Comparing Performance: Loops vs. Iterators
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_2" type="checkbox" id="__nav_4_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_2">
+          More about Cargo and Crates.io
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="More about Cargo and Crates.io" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_2">
+          <span class="md-nav__icon md-icon"></span>
+          More about Cargo and Crates.io
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-00-more-about-cargo/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-01-release-profiles/" class="md-nav__link">
+        Customizing Builds with Release Profiles
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-02-publishing-to-crates-io/" class="md-nav__link">
+        Publishing a Crate to Crates.io
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-03-cargo-workspaces/" class="md-nav__link">
+        Cargo Workspaces
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-04-installing-binaries/" class="md-nav__link">
+        Installing Binaries from Crates.io with `cargo install`
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch14-05-extending-cargo/" class="md-nav__link">
+        Extending Cargo with Custom Commands
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_3" type="checkbox" id="__nav_4_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_3">
+          Smart Pointers
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Smart Pointers" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_3">
+          <span class="md-nav__icon md-icon"></span>
+          Smart Pointers
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-00-smart-pointers/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-01-box/" class="md-nav__link">
+        Using `Box<T>` to Point to Data on the Heap
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-02-deref/" class="md-nav__link">
+        Treating Smart Pointers Like Regular References with the `Deref` Trait
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-03-drop/" class="md-nav__link">
+        Running Code on Cleanup with the `Drop` Trait
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-04-rc/" class="md-nav__link">
+        `Rc<T>`, the Reference Counted Smart Pointer
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-05-interior-mutability/" class="md-nav__link">
+        `RefCell<T>` and the Interior Mutability Pattern
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch15-06-reference-cycles/" class="md-nav__link">
+        Reference Cycles Can Leak Memory
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_4" type="checkbox" id="__nav_4_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_4">
+          Fearless Concurrency
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Fearless Concurrency" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_4">
+          <span class="md-nav__icon md-icon"></span>
+          Fearless Concurrency
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-00-concurrency/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-01-threads/" class="md-nav__link">
+        Using Threads to Run Code Simultaneously
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-02-message-passing/" class="md-nav__link">
+        Using Message Passing to Transfer Data Between Threads
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-03-shared-state/" class="md-nav__link">
+        Shared-State Concurrency
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch16-04-extensible-concurrency-sync-and-send/" class="md-nav__link">
+        Extensible Concurrency with the `Sync` and `Send` Traits
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4_5" type="checkbox" id="__nav_4_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_4_5">
+          Object Oriented Programming Features of Rust
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Object Oriented Programming Features of Rust" data-md-level="2">
+        <label class="md-nav__title" for="__nav_4_5">
+          <span class="md-nav__icon md-icon"></span>
+          Object Oriented Programming Features of Rust
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-00-oop/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-01-what-is-oo/" class="md-nav__link">
+        Characteristics of Object-Oriented Languages
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-02-trait-objects/" class="md-nav__link">
+        Using Trait Objects That Allow for Values of Different Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch17-03-oo-design-patterns/" class="md-nav__link">
+        Implementing an Object-Oriented Design Pattern
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Advanced Topics
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Advanced Topics" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced Topics
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_1" type="checkbox" id="__nav_5_1" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_1">
+          Patterns and Matching
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Patterns and Matching" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_1">
+          <span class="md-nav__icon md-icon"></span>
+          Patterns and Matching
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-00-patterns/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-01-all-the-places-for-patterns/" class="md-nav__link">
+        All the Places Patterns Can Be Used
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-02-refutability/" class="md-nav__link">
+        Refutability: Whether a Pattern Might Fail to Match
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch18-03-pattern-syntax/" class="md-nav__link">
+        Pattern Syntax
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_2" type="checkbox" id="__nav_5_2" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_2">
+          Advanced Features
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Advanced Features" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_2">
+          <span class="md-nav__icon md-icon"></span>
+          Advanced Features
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-00-advanced-features/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-01-unsafe-rust/" class="md-nav__link">
+        Unsafe Rust
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-03-advanced-traits/" class="md-nav__link">
+        Advanced Traits
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-04-advanced-types/" class="md-nav__link">
+        Advanced Types
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-05-advanced-functions-and-closures/" class="md-nav__link">
+        Advanced Functions and Closures
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch19-06-macros/" class="md-nav__link">
+        Macros
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_3" type="checkbox" id="__nav_5_3" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_3">
+          Final Project: Building a Multithreaded Web Server
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Final Project: Building a Multithreaded Web Server" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_3">
+          <span class="md-nav__icon md-icon"></span>
+          Final Project: Building a Multithreaded Web Server
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-00-final-project-a-web-server/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-01-single-threaded/" class="md-nav__link">
+        Building a Single-Threaded Web Server
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-02-multithreaded/" class="md-nav__link">
+        Turning Our Single-Threaded Server into a Multithreaded Server
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ch20-03-graceful-shutdown-and-cleanup/" class="md-nav__link">
+        Graceful Shutdown and Cleanup
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5_4" type="checkbox" id="__nav_5_4" >
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_5_4">
+          Appendix
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Appendix" data-md-level="2">
+        <label class="md-nav__title" for="__nav_5_4">
+          <span class="md-nav__icon md-icon"></span>
+          Appendix
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-00/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-01-keywords/" class="md-nav__link">
+        A - Keywords
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-02-operators/" class="md-nav__link">
+        B - Operators and Symbols
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-03-derivable-traits/" class="md-nav__link">
+        C - Derivable Traits
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-04-useful-development-tools/" class="md-nav__link">
+        D - Useful Development Tools
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-05-editions/" class="md-nav__link">
+        E - Editions
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-06-translation/" class="md-nav__link">
+        F - Translations of the Book
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appendix-07-nightly-rust/" class="md-nav__link">
+        G - How Rust is Made and “Nightly Rust”
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#traits-defining-shared-behavior" class="md-nav__link">
+    Traits: Defining Shared Behavior
+  </a>
+  
+    <nav class="md-nav" aria-label="Traits: Defining Shared Behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#defining-a-trait" class="md-nav__link">
+    Defining a Trait
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementing-a-trait-on-a-type" class="md-nav__link">
+    Implementing a Trait on a Type
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-implementations" class="md-nav__link">
+    Default Implementations
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#traits-as-parameters" class="md-nav__link">
+    Traits as Parameters
+  </a>
+  
+    <nav class="md-nav" aria-label="Traits as Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#trait-bound-syntax" class="md-nav__link">
+    Trait Bound Syntax
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#specifying-multiple-trait-bounds-with-the-syntax" class="md-nav__link">
+    Specifying Multiple Trait Bounds with the + Syntax
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clearer-trait-bounds-with-where-clauses" class="md-nav__link">
+    Clearer Trait Bounds with where Clauses
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returning-types-that-implement-traits" class="md-nav__link">
+    Returning Types that Implement Traits
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-trait-bounds-to-conditionally-implement-methods" class="md-nav__link">
+    Using Trait Bounds to Conditionally Implement Methods
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+                
+  <a href="https://github.com/kkoshin/rust-lang-book/edit/main/src/ch10-02-traits.md" title="Edit this page" class="md-content__button md-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+
+  <h1>Traits: Defining Shared Behavior</h1>
+
+<h2 id="traits-defining-shared-behavior">Traits: Defining Shared Behavior</h2>
+<p>A <em>trait</em> defines functionality a particular type has and can share with other
+types. We can use traits to define shared behavior in an abstract way. We can
+use <em>trait bounds</em> to specify that a generic type can be any type that has
+certain behavior.</p>
+<blockquote>
+<p>Note: Traits are similar to a feature often called <em>interfaces</em> in other
+languages, although with some differences.</p>
+</blockquote>
+<h3 id="defining-a-trait">Defining a Trait</h3>
+<p>A type’s behavior consists of the methods we can call on that type. Different
+types share the same behavior if we can call the same methods on all of those
+types. Trait definitions are a way to group method signatures together to
+define a set of behaviors necessary to accomplish some purpose.</p>
+<p>For example, let’s say we have multiple structs that hold various kinds and
+amounts of text: a <code>NewsArticle</code> struct that holds a news story filed in a
+particular location and a <code>Tweet</code> that can have at most 280 characters along
+with metadata that indicates whether it was a new tweet, a retweet, or a reply
+to another tweet.</p>
+<p>We want to make a media aggregator library crate named <code>aggregator</code> that can
+display summaries of data that might be stored in a <code>NewsArticle</code> or <code>Tweet</code>
+instance. To do this, we need a summary from each type, and we’ll request
+that summary by calling a <code>summarize</code> method on an instance. Listing 10-12
+shows the definition of a public <code>Summary</code> trait that expresses this behavior.</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">12</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 10-12: A <code>Summary</code> trait that consists of the
+behavior provided by a <code>summarize</code> method</span></p>
+<p>Here, we declare a trait using the <code>trait</code> keyword and then the trait’s name,
+which is <code>Summary</code> in this case. We’ve also declared the trait as <code>pub</code> so that
+crates depending on this crate can make use of this trait too, as we’ll see in
+a few examples. Inside the curly brackets, we declare the method signatures
+that describe the behaviors of the types that implement this trait, which in
+this case is <code>fn summarize(&amp;self) -&gt; String</code>.</p>
+<p>After the method signature, instead of providing an implementation within curly
+brackets, we use a semicolon. Each type implementing this trait must provide
+its own custom behavior for the body of the method. The compiler will enforce
+that any type that has the <code>Summary</code> trait will have the method <code>summarize</code>
+defined with this signature exactly.</p>
+<p>A trait can have multiple methods in its body: the method signatures are listed
+one per line and each line ends in a semicolon.</p>
+<h3 id="implementing-a-trait-on-a-type">Implementing a Trait on a Type</h3>
+<p>Now that we’ve defined the desired signatures of the <code>Summary</code> trait’s methods,
+we can implement it on the types in our media aggregator. Listing 10-13 shows
+an implementation of the <code>Summary</code> trait on the <code>NewsArticle</code> struct that uses
+the headline, the author, and the location to create the return value of
+<code>summarize</code>. For the <code>Tweet</code> struct, we define <code>summarize</code> as the username
+followed by the entire text of the tweet, assuming that tweet content is
+already limited to 280 characters.</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">13</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 10-13: Implementing the <code>Summary</code> trait on the
+<code>NewsArticle</code> and <code>Tweet</code> types</span></p>
+<p>Implementing a trait on a type is similar to implementing regular methods. The
+difference is that after <code>impl</code>, we put the trait name we want to implement,
+then use the <code>for</code> keyword, and then specify the name of the type we want to
+implement the trait for. Within the <code>impl</code> block, we put the method signatures
+that the trait definition has defined. Instead of adding a semicolon after each
+signature, we use curly brackets and fill in the method body with the specific
+behavior that we want the methods of the trait to have for the particular type.</p>
+<p>Now that the library has implemented the <code>Summary</code> trait on <code>NewsArticle</code> and
+<code>Tweet</code>, users of the crate can call the trait methods on instances of
+<code>NewsArticle</code> and <code>Tweet</code> in the same way we call regular methods. The only
+difference is that the user must bring the trait into scope as well as the
+types. Here’s an example of how a binary crate could use our <code>aggregator</code>
+library crate:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">01</span><span class="o">-</span><span class="n">calling</span><span class="o">-</span><span class="k">trait</span><span class="o">-</span><span class="n">method</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>This code prints <code>1 new tweet: horse_ebooks: of course, as you probably already
+know, people</code>.</p>
+<p>Other crates that depend on the <code>aggregator</code> crate can also bring the <code>Summary</code>
+trait into scope to implement <code>Summary</code> on their own types. One restriction to
+note is that we can implement a trait on a type only if at least one of the
+trait or the type is local to our crate. For example, we can implement standard
+library traits like <code>Display</code> on a custom type like <code>Tweet</code> as part of our
+<code>aggregator</code> crate functionality, because the type <code>Tweet</code> is local to our
+<code>aggregator</code> crate. We can also implement <code>Summary</code> on <code>Vec&lt;T&gt;</code> in our
+<code>aggregator</code> crate, because the trait <code>Summary</code> is local to our <code>aggregator</code>
+crate.</p>
+<p>But we can’t implement external traits on external types. For example, we can’t
+implement the <code>Display</code> trait on <code>Vec&lt;T&gt;</code> within our <code>aggregator</code> crate,
+because <code>Display</code> and <code>Vec&lt;T&gt;</code> are both defined in the standard library and
+aren’t local to our <code>aggregator</code> crate. This restriction is part of a property
+called <em>coherence</em>, and more specifically the <em>orphan rule</em>, so named because
+the parent type is not present. This rule ensures that other people’s code
+can’t break your code and vice versa. Without the rule, two crates could
+implement the same trait for the same type, and Rust wouldn’t know which
+implementation to use.</p>
+<h3 id="default-implementations">Default Implementations</h3>
+<p>Sometimes it’s useful to have default behavior for some or all of the methods
+in a trait instead of requiring implementations for all methods on every type.
+Then, as we implement the trait on a particular type, we can keep or override
+each method’s default behavior.</p>
+<p>In Listing 10-14 we specify a default string for the <code>summarize</code> method of the
+<code>Summary</code> trait instead of only defining the method signature, as we did in
+Listing 10-12.</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">14</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 10-14: Defining a <code>Summary</code> trait with a default
+implementation of the <code>summarize</code> method</span></p>
+<p>To use a default implementation to summarize instances of <code>NewsArticle</code>, we
+specify an empty <code>impl</code> block with <code>impl Summary for NewsArticle {}</code>.</p>
+<p>Even though we’re no longer defining the <code>summarize</code> method on <code>NewsArticle</code>
+directly, we’ve provided a default implementation and specified that
+<code>NewsArticle</code> implements the <code>Summary</code> trait. As a result, we can still call
+the <code>summarize</code> method on an instance of <code>NewsArticle</code>, like this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">02</span><span class="o">-</span><span class="n">calling</span><span class="o">-</span><span class="n">default</span><span class="o">-</span><span class="k">impl</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>This code prints <code>New article available! (Read more...)</code>.</p>
+<p>Creating a default implementation doesn’t require us to change anything about
+the implementation of <code>Summary</code> on <code>Tweet</code> in Listing 10-13. The reason is that
+the syntax for overriding a default implementation is the same as the syntax
+for implementing a trait method that doesn’t have a default implementation.</p>
+<p>Default implementations can call other methods in the same trait, even if those
+other methods don’t have a default implementation. In this way, a trait can
+provide a lot of useful functionality and only require implementors to specify
+a small part of it. For example, we could define the <code>Summary</code> trait to have a
+<code>summarize_author</code> method whose implementation is required, and then define a
+<code>summarize</code> method that has a default implementation that calls the
+<code>summarize_author</code> method:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="n">default</span><span class="o">-</span><span class="k">impl</span><span class="o">-</span><span class="n">calls</span><span class="o">-</span><span class="n">other</span><span class="o">-</span><span class="n">methods</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>To use this version of <code>Summary</code>, we only need to define <code>summarize_author</code>
+when we implement the trait on a type:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="n">default</span><span class="o">-</span><span class="k">impl</span><span class="o">-</span><span class="n">calls</span><span class="o">-</span><span class="n">other</span><span class="o">-</span><span class="n">methods</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">impl</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>After we define <code>summarize_author</code>, we can call <code>summarize</code> on instances of the
+<code>Tweet</code> struct, and the default implementation of <code>summarize</code> will call the
+definition of <code>summarize_author</code> that we’ve provided. Because we’ve implemented
+<code>summarize_author</code>, the <code>Summary</code> trait has given us the behavior of the
+<code>summarize</code> method without requiring us to write any more code.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">03</span><span class="o">-</span><span class="n">default</span><span class="o">-</span><span class="k">impl</span><span class="o">-</span><span class="n">calls</span><span class="o">-</span><span class="n">other</span><span class="o">-</span><span class="n">methods</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">main</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>This code prints <code>1 new tweet: (Read more from @horse_ebooks...)</code>.</p>
+<p>Note that it isn’t possible to call the default implementation from an
+overriding implementation of that same method.</p>
+<h3 id="traits-as-parameters">Traits as Parameters</h3>
+<p>Now that you know how to define and implement traits, we can explore how to use
+traits to define functions that accept many different types. We'll use the
+<code>Summary</code> trait we implemented on the <code>NewsArticle</code> and <code>Tweet</code> types in
+Listing 10-13 to define a <code>notify</code> function that calls the <code>summarize</code> method
+on its <code>item</code> parameter, which is of some type that implements the <code>Summary</code>
+trait. To do this, we use the <code>impl Trait</code> syntax, like this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">04</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="k">as</span><span class="o">-</span><span class="n">parameters</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>Instead of a concrete type for the <code>item</code> parameter, we specify the <code>impl</code>
+keyword and the trait name. This parameter accepts any type that implements the
+specified trait. In the body of <code>notify</code>, we can call any methods on <code>item</code>
+that come from the <code>Summary</code> trait, such as <code>summarize</code>. We can call <code>notify</code>
+and pass in any instance of <code>NewsArticle</code> or <code>Tweet</code>. Code that calls the
+function with any other type, such as a <code>String</code> or an <code>i32</code>, won’t compile
+because those types don’t implement <code>Summary</code>.</p>
+<!-- Old headings. Do not remove or links may break. -->
+<p><a id="fixing-the-largest-function-with-trait-bounds"></a></p>
+<h4 id="trait-bound-syntax">Trait Bound Syntax</h4>
+<p>The <code>impl Trait</code> syntax works for straightforward cases but is actually syntax
+sugar for a longer form known as a <em>trait bound</em>; it looks like this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">notify</span><span class="o">&lt;</span><span class="n">T</span>: <span class="nc">Summary</span><span class="o">&gt;</span><span class="p">(</span><span class="n">item</span>: <span class="kp">&amp;</span><span class="nc">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span><span class="fm">println!</span><span class="p">(</span><span class="s">&quot;Breaking news! {}&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">item</span><span class="p">.</span><span class="n">summarize</span><span class="p">());</span><span class="w"></span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<p>This longer form is equivalent to the example in the previous section but is
+more verbose. We place trait bounds with the declaration of the generic type
+parameter after a colon and inside angle brackets.</p>
+<p>The <code>impl Trait</code> syntax is convenient and makes for more concise code in simple
+cases, while the fuller trait bound syntax can express more complexity in other
+cases. For example, we can have two parameters that implement <code>Summary</code>. Doing
+so with the <code>impl Trait</code> syntax looks like this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">notify</span><span class="p">(</span><span class="n">item1</span>: <span class="kp">&amp;</span><span class="nc">impl</span><span class="w"> </span><span class="n">Summary</span><span class="p">,</span><span class="w"> </span><span class="n">item2</span>: <span class="kp">&amp;</span><span class="nc">impl</span><span class="w"> </span><span class="n">Summary</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</code></pre></div>
+<p>Using <code>impl Trait</code> is appropriate if we want this function to allow <code>item1</code> and
+<code>item2</code> to have different types (as long as both types implement <code>Summary</code>). If
+we want to force both parameters to have the same type, however, we must use a
+trait bound, like this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">notify</span><span class="o">&lt;</span><span class="n">T</span>: <span class="nc">Summary</span><span class="o">&gt;</span><span class="p">(</span><span class="n">item1</span>: <span class="kp">&amp;</span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="n">item2</span>: <span class="kp">&amp;</span><span class="nc">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</code></pre></div>
+<p>The generic type <code>T</code> specified as the type of the <code>item1</code> and <code>item2</code>
+parameters constrains the function such that the concrete type of the value
+passed as an argument for <code>item1</code> and <code>item2</code> must be the same.</p>
+<h4 id="specifying-multiple-trait-bounds-with-the-syntax">Specifying Multiple Trait Bounds with the <code>+</code> Syntax</h4>
+<p>We can also specify more than one trait bound. Say we wanted <code>notify</code> to use
+display formatting as well as <code>summarize</code> on <code>item</code>: we specify in the <code>notify</code>
+definition that <code>item</code> must implement both <code>Display</code> and <code>Summary</code>. We can do
+so using the <code>+</code> syntax:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">notify</span><span class="p">(</span><span class="n">item</span>: <span class="kp">&amp;</span><span class="p">(</span><span class="k">impl</span><span class="w"> </span><span class="n">Summary</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Display</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</code></pre></div>
+<p>The <code>+</code> syntax is also valid with trait bounds on generic types:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">pub</span><span class="w"> </span><span class="k">fn</span> <span class="nf">notify</span><span class="o">&lt;</span><span class="n">T</span>: <span class="nc">Summary</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Display</span><span class="o">&gt;</span><span class="p">(</span><span class="n">item</span>: <span class="kp">&amp;</span><span class="nc">T</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+</code></pre></div>
+<p>With the two trait bounds specified, the body of <code>notify</code> can call <code>summarize</code>
+and use <code>{}</code> to format <code>item</code>.</p>
+<h4 id="clearer-trait-bounds-with-where-clauses">Clearer Trait Bounds with <code>where</code> Clauses</h4>
+<p>Using too many trait bounds has its downsides. Each generic has its own trait
+bounds, so functions with multiple generic type parameters can contain lots of
+trait bound information between the function’s name and its parameter list,
+making the function signature hard to read. For this reason, Rust has alternate
+syntax for specifying trait bounds inside a <code>where</code> clause after the function
+signature. So instead of writing this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="k">fn</span> <span class="nf">some_function</span><span class="o">&lt;</span><span class="n">T</span>: <span class="nc">Display</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="nb">Clone</span><span class="p">,</span><span class="w"> </span><span class="n">U</span>: <span class="nb">Clone</span> <span class="o">+</span><span class="w"> </span><span class="n">Debug</span><span class="o">&gt;</span><span class="p">(</span><span class="n">t</span>: <span class="kp">&amp;</span><span class="nc">T</span><span class="p">,</span><span class="w"> </span><span class="n">u</span>: <span class="kp">&amp;</span><span class="nc">U</span><span class="p">)</span><span class="w"> </span>-&gt; <span class="kt">i32</span> <span class="p">{</span><span class="w"></span>
+</code></pre></div>
+<p>we can use a <code>where</code> clause, like this:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">07</span><span class="o">-</span><span class="k">where</span><span class="o">-</span><span class="n">clause</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>This function’s signature is less cluttered: the function name, parameter list,
+and return type are close together, similar to a function without lots of trait
+bounds.</p>
+<h3 id="returning-types-that-implement-traits">Returning Types that Implement Traits</h3>
+<p>We can also use the <code>impl Trait</code> syntax in the return position to return a
+value of some type that implements a trait, as shown here:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">05</span><span class="o">-</span><span class="n">returning</span><span class="o">-</span><span class="k">impl</span><span class="o">-</span><span class="k">trait</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>By using <code>impl Summary</code> for the return type, we specify that the
+<code>returns_summarizable</code> function returns some type that implements the <code>Summary</code>
+trait without naming the concrete type. In this case, <code>returns_summarizable</code>
+returns a <code>Tweet</code>, but the code calling this function doesn’t need to know that.</p>
+<p>The ability to specify a return type only by the trait it implements is
+especially useful in the context of closures and iterators, which we cover in
+Chapter 13. Closures and iterators create types that only the compiler knows or
+types that are very long to specify. The <code>impl Trait</code> syntax lets you concisely
+specify that a function returns some type that implements the <code>Iterator</code> trait
+without needing to write out a very long type.</p>
+<p>However, you can only use <code>impl Trait</code> if you’re returning a single type. For
+example, this code that returns either a <code>NewsArticle</code> or a <code>Tweet</code> with the
+return type specified as <code>impl Summary</code> wouldn’t work:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">no</span><span class="o">-</span><span class="n">listing</span><span class="o">-</span><span class="mi">06</span><span class="o">-</span><span class="k">impl</span><span class="o">-</span><span class="k">trait</span><span class="o">-</span><span class="n">returns</span><span class="o">-</span><span class="n">one</span><span class="o">-</span><span class="k">type</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span>:<span class="nc">here</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p>Returning either a <code>NewsArticle</code> or a <code>Tweet</code> isn’t allowed due to restrictions
+around how the <code>impl Trait</code> syntax is implemented in the compiler. We’ll cover
+how to write a function with this behavior in the <a href="ch17-02-trait-objects.html#using-trait-objects-that-allow-for-values-of-different-types">“Using Trait Objects That
+Allow for Values of Different
+Types”</a><!--
+ignore --> section of Chapter 17.</p>
+<h3 id="using-trait-bounds-to-conditionally-implement-methods">Using Trait Bounds to Conditionally Implement Methods</h3>
+<p>By using a trait bound with an <code>impl</code> block that uses generic type parameters,
+we can implement methods conditionally for types that implement the specified
+traits. For example, the type <code>Pair&lt;T&gt;</code> in Listing 10-15 always implements the
+<code>new</code> function to return a new instance of <code>Pair&lt;T&gt;</code> (recall from the
+<a href="ch05-03-method-syntax.html#defining-methods">“Defining Methods”</a><!-- ignore --> section of Chapter 5 that <code>Self</code>
+is a type alias for the type of the <code>impl</code> block, which in this case is
+<code>Pair&lt;T&gt;</code>). But in the next <code>impl</code> block, <code>Pair&lt;T&gt;</code> only implements the
+<code>cmp_display</code> method if its inner type <code>T</code> implements the <code>PartialOrd</code> trait
+that enables comparison <em>and</em> the <code>Display</code> trait that enables printing.</p>
+<p><span class="filename">Filename: src/lib.rs</span></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="p">{{</span>#<span class="n">rustdoc_include</span><span class="w"> </span><span class="o">../</span><span class="n">listings</span><span class="o">/</span><span class="n">ch10</span><span class="o">-</span><span class="n">generic</span><span class="o">-</span><span class="n">types</span><span class="o">-</span><span class="n">traits</span><span class="o">-</span><span class="n">and</span><span class="o">-</span><span class="n">lifetimes</span><span class="o">/</span><span class="n">listing</span><span class="o">-</span><span class="mi">10</span><span class="o">-</span><span class="mi">15</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">lib</span><span class="p">.</span><span class="n">rs</span><span class="p">}}</span><span class="w"></span>
+</code></pre></div>
+<p><span class="caption">Listing 10-15: Conditionally implementing methods on a
+generic type depending on trait bounds</span></p>
+<p>We can also conditionally implement a trait for any type that implements
+another trait. Implementations of a trait on any type that satisfies the trait
+bounds are called <em>blanket implementations</em> and are extensively used in the
+Rust standard library. For example, the standard library implements the
+<code>ToString</code> trait on any type that implements the <code>Display</code> trait. The <code>impl</code>
+block in the standard library looks similar to this code:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="k">impl</span><span class="o">&lt;</span><span class="n">T</span>: <span class="nc">Display</span><span class="o">&gt;</span><span class="w"> </span><span class="nb">ToString</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="w">    </span><span class="c1">// --snip--</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="p">}</span><span class="w"></span>
+</code></pre></div>
+<p>Because the standard library has this blanket implementation, we can call the
+<code>to_string</code> method defined by the <code>ToString</code> trait on any type that implements
+the <code>Display</code> trait. For example, we can turn integers into their corresponding
+<code>String</code> values like this because integers implement <code>Display</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="kd">let</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">3.</span><span class="n">to_string</span><span class="p">();</span><span class="w"></span>
+</code></pre></div>
+<p>Blanket implementations appear in the documentation for the trait in the
+“Implementors” section.</p>
+<p>Traits and trait bounds let us write code that uses generic type parameters to
+reduce duplication but also specify to the compiler that we want the generic
+type to have particular behavior. The compiler can then use the trait bound
+information to check that all the concrete types used with our code provide the
+correct behavior. In dynamically typed languages, we would get an error at
+runtime if we called a method on a type which didn’t define the method. But Rust
+moves these errors to compile time so we’re forced to fix the problems before
+our code is even able to run. Additionally, we don’t have to write code that
+checks for behavior at runtime because we’ve already checked at compile time.
+Doing so improves performance without having to give up the flexibility of
+generics.</p>
+
+  <hr>
+<div class="md-source-file">
+  <small>
+    
+      Last update:
+      2022-07-25
+    
+  </small>
+</div>
+
+              
+            </article>
+            
+          </div>
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../ch10-01-syntax/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Generic Data Types" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Generic Data Types
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../ch10-03-lifetime-syntax/" class="md-footer__link md-footer__link--next" aria-label="Next: Validating References with Lifetimes" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Validating References with Lifetimes
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; 2022 Rust
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.top", "navigation.tabs"], "search": "../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.6c7ad80a.min.js"></script>
+      
+    
+  </body>
+</html>
