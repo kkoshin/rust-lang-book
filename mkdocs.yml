@@ -49,7 +49,7 @@ plugins:
 # Must be in sync with src/SUMMARY.md
 nav:
   - 'The Rust Programming Language': 
-    - 'Overview': title-page.md
+    - 'Overview': index.md
     - 'Foreword': foreword.md
     - 'Introduction': ch00-00-introduction.md
 
