@@ -37,7 +37,7 @@ person will get. This setup is shown in Listing 13-1:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-13-01/src/main.rs}}
 ```
 
@@ -121,7 +121,7 @@ to line up the relevant parts. This illustrates how closure syntax is similar
 to function syntax except for the use of pipes and the amount of syntax that is
 optional:
 
-```rust,ignore
+```rust
 fn  add_one_v1   (x: u32) -> u32 { x + 1 }
 let add_one_v2 = |x: u32| -> u32 { x + 1 };
 let add_one_v3 = |x|             { x + 1 };
@@ -149,7 +149,7 @@ which we’ve done here with `String` the first time. If we then try to call
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-13-03/src/main.rs:here}}
 ```
 
@@ -300,7 +300,7 @@ depending on how the closure’s body handles the values:
 Let’s look at the definition of the `unwrap_or_else` method on `Option<T>` that
 we used in Listing 13-1:
 
-```rust,ignore
+```rust
 impl<T> Option<T> {
     pub fn unwrap_or_else<F>(self, f: F) -> T
     where
@@ -374,7 +374,7 @@ compiler won’t let us use this closure with `sort_by_key`:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-13-08/src/main.rs}}
 ```
 

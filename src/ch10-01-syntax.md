@@ -44,7 +44,7 @@ to declare the type parameter name before we use it. To define the generic
 `largest` function, place type name declarations inside angle brackets, `<>`,
 between the name of the function and the parameter list, like this:
 
-```rust,ignore
+```rust
 fn largest<T>(list: &[T]) -> &T {
 ```
 
@@ -60,7 +60,7 @@ compile yet, but we’ll fix it later in this chapter.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-05/src/main.rs}}
 ```
 
@@ -112,7 +112,7 @@ Listing 10-7, our code won’t compile.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-07/src/main.rs}}
 ```
 

@@ -55,7 +55,7 @@ git co output.txt
 cd ../../..
 -->
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-01/src/lib.rs}}
 ```
 
@@ -115,7 +115,7 @@ the `it_works` function to a different name, such as `exploration`, like so:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-01-changing-test-name/src/lib.rs}}
 ```
 
@@ -135,7 +135,7 @@ is to call the `panic!` macro. Enter the new test as a function named
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,panics,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-03/src/lib.rs:here}}
 ```
 
@@ -184,7 +184,7 @@ method, which are repeated here in Listing 11-5. Let’s put this code in the
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-05/src/lib.rs:here}}
 ```
 
@@ -199,7 +199,7 @@ has a width of 5 and a height of 1.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-06/src/lib.rs:here}}
 ```
 
@@ -229,7 +229,7 @@ rectangle cannot hold a larger rectangle:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-02-adding-another-rectangle-test/src/lib.rs:here}}
 ```
 
@@ -246,7 +246,7 @@ introduce a bug in our code. We’ll change the implementation of the `can_hold`
 method by replacing the greater-than sign with a less-than sign when it
 compares the widths:
 
-```rust,not_desired_behavior,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-03-introducing-a-bug/src/lib.rs:here}}
 ```
 
@@ -278,7 +278,7 @@ parameter, then we test this function using the `assert_eq!` macro.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-07/src/lib.rs}}
 ```
 
@@ -298,7 +298,7 @@ ok`, and the `ok` text indicates that our test passed!
 Let’s introduce a bug into our code to see what `assert_eq!` looks like when it
 fails. Change the implementation of the `add_two` function to instead add `3`:
 
-```rust,not_desired_behavior,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-04-bug-in-add-two/src/lib.rs:here}}
 ```
 
@@ -362,7 +362,7 @@ want to test that the name we pass into the function appears in the output:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-05-greeter/src/lib.rs}}
 ```
 
@@ -376,7 +376,7 @@ input parameter.
 Now let’s introduce a bug into this code by changing `greeting` to exclude
 `name` to see what the default test failure looks like:
 
-```rust,not_desired_behavior,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-06-greeter-with-bug/src/lib.rs:here}}
 ```
 
@@ -392,7 +392,7 @@ assertion is on. A more useful failure message would print the value from the
 string with a placeholder filled in with the actual value we got from the
 `greeting` function:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-07-custom-failure-message/src/lib.rs:here}}
 ```
 
@@ -423,7 +423,7 @@ happen when we expect them to.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-08/src/lib.rs}}
 ```
 
@@ -441,7 +441,7 @@ passes:
 Looks good! Now let’s introduce a bug in our code by removing the condition
 that the `new` function will panic if the value is greater than 100:
 
-```rust,not_desired_behavior,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-08-guess-with-bug/src/lib.rs:here}}
 ```
 
@@ -466,7 +466,7 @@ too large.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-09/src/lib.rs:here}}
 ```
 
@@ -486,7 +486,7 @@ To see what happens when a `should_panic` test with an `expected` message
 fails, let’s again introduce a bug into our code by swapping the bodies of the
 `if value < 1` and the `else if value > 100` blocks:
 
-```rust,ignore,not_desired_behavior
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-09-guess-with-panic-msg-bug/src/lib.rs:here}}
 ```
 
@@ -508,7 +508,7 @@ Our tests so far all panic when they fail. We can also write tests that use
 `Result<T, E>`! Here’s the test from Listing 11-1, rewritten to use `Result<T,
 E>` and return an `Err` instead of panicking:
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-10-result-in-tests/src/lib.rs}}
 ```
 

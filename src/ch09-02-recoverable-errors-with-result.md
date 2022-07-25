@@ -61,7 +61,7 @@ Chapter 6.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,should_panic
+```rust
 {{#rustdoc_include ../listings/ch09-error-handling/listing-09-04/src/main.rs}}
 ```
 
@@ -103,7 +103,7 @@ add an inner `match` expression, shown in Listing 9-5.
 <!-- ignore this test because otherwise it creates hello.txt which causes other
 tests to fail lol -->
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch09-error-handling/listing-09-05/src/main.rs}}
 ```
 
@@ -174,7 +174,7 @@ call the `panic!` macro for us. Here is an example of `unwrap` in action:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,should_panic
+```rust
 {{#rustdoc_include ../listings/ch09-error-handling/no-listing-04-unwrap/src/main.rs}}
 ```
 
@@ -200,7 +200,7 @@ your intent and make tracking down the source of a panic easier. The syntax of
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,should_panic
+```rust
 {{#rustdoc_include ../listings/ch09-error-handling/no-listing-05-expect/src/main.rs}}
 ```
 
@@ -417,7 +417,7 @@ we use `?` on:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch09-error-handling/listing-09-10/src/main.rs}}
 ```
 
@@ -498,7 +498,7 @@ code from Listing 9-10 but we’ve changed the return type of `main` to be
 `Result<(), Box<dyn Error>>` and added a return value `Ok(())` to the end. This
 code will now compile:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch09-error-handling/listing-09-12/src/main.rs}}
 ```
 

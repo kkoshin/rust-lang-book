@@ -78,7 +78,7 @@ examine how it’s possible.
 A consequence of the borrowing rules is that when you have an immutable value,
 you can’t borrow it mutably. For example, this code won’t compile:
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch15-smart-pointers/no-listing-01-cant-borrow-immutable-as-mutable/src/main.rs}}
 ```
 
@@ -131,7 +131,7 @@ called `Messenger`. Listing 15-20 shows the library code:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch15-smart-pointers/listing-15-20/src/lib.rs}}
 ```
 
@@ -158,7 +158,7 @@ implement a mock object to do just that, but the borrow checker won’t allow it
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch15-smart-pointers/listing-15-21/src/lib.rs:here}}
 ```
 
@@ -202,7 +202,7 @@ shows what that looks like:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch15-smart-pointers/listing-15-22/src/lib.rs:here}}
 ```
 
@@ -251,7 +251,7 @@ at runtime.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,panics
+```rust
 {{#rustdoc_include ../listings/ch15-smart-pointers/listing-15-23/src/lib.rs:here}}
 ```
 

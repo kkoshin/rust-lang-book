@@ -33,7 +33,7 @@ Let’s try calling `panic!` in a simple program:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,should_panic,panics
+```rust
 {{#rustdoc_include ../listings/ch09-error-handling/no-listing-01-panic/src/main.rs}}
 ```
 
@@ -66,7 +66,7 @@ index in a vector beyond the range of valid indexes.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,should_panic,panics
+```rust
 {{#rustdoc_include ../listings/ch09-error-handling/listing-09-01/src/main.rs}}
 ```
 

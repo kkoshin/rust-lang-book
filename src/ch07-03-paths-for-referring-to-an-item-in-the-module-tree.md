@@ -31,7 +31,7 @@ Keyword”][pub]<!-- ignore --> section, we’ll go into more detail about `pub`
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-03/src/lib.rs}}
 ```
 
@@ -106,7 +106,7 @@ access to the `add_to_waitlist` function in the child module, so we mark the
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-05/src/lib.rs}}
 ```
 
@@ -141,7 +141,7 @@ keyword before its definition, as in Listing 7-7.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground,test_harness
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-07/src/lib.rs}}
 ```
 
@@ -217,7 +217,7 @@ function `deliver_order` defined in the parent module by specifying the path to
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground,test_harness
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-08/src/lib.rs}}
 ```
 
@@ -248,7 +248,7 @@ customers can’t choose the fruit or even see which fruit they’ll get.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-09/src/lib.rs}}
 ```
 
@@ -273,7 +273,7 @@ only need the `pub` before the `enum` keyword, as shown in Listing 7-10.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-10/src/lib.rs}}
 ```
 

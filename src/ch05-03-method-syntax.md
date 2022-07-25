@@ -139,7 +139,7 @@ program shown in Listing 5-14.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-14/src/main.rs}}
 ```
 

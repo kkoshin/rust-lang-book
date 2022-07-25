@@ -12,7 +12,7 @@ one word, so the entire string should be returned.
 Let’s work through how we’d write the signature of this function without using
 slices, to understand the problem that slices will solve:
 
-```rust,ignore
+```rust
 fn first_word(s: &String) -> ?
 ```
 
@@ -34,13 +34,13 @@ Because we need to go through the `String` element by element and check whether
 a value is a space, we’ll convert our `String` to an array of bytes using the
 `as_bytes` method:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch04-understanding-ownership/listing-04-07/src/main.rs:as_bytes}}
 ```
 
 Next, we create an iterator over the array of bytes using the `iter` method:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch04-understanding-ownership/listing-04-07/src/main.rs:iter}}
 ```
 
@@ -62,7 +62,7 @@ Inside the `for` loop, we search for the byte that represents the space by
 using the byte literal syntax. If we find a space, we return the position.
 Otherwise, we return the length of the string by using `s.len()`:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch04-understanding-ownership/listing-04-07/src/main.rs:inside_for}}
 ```
 
@@ -92,7 +92,7 @@ Having to worry about the index in `word` getting out of sync with the data in
 `s` is tedious and error prone! Managing these indices is even more brittle if
 we write a `second_word` function. Its signature would have to look like this:
 
-```rust,ignore
+```rust
 fn second_word(s: &String) -> (usize, usize) {
 ```
 
@@ -189,7 +189,7 @@ the slice and the number of elements in the slice.
 
 Returning a slice would also work for a `second_word` function:
 
-```rust,ignore
+```rust
 fn second_word(s: &String) -> &str {
 ```
 
@@ -205,7 +205,7 @@ compile-time error:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch04-understanding-ownership/no-listing-19-slice-error/src/main.rs:here}}
 ```
 
@@ -242,7 +242,7 @@ immutable reference.
 Knowing that you can take slices of literals and `String` values leads us to
 one more improvement on `first_word`, and that’s its signature:
 
-```rust,ignore
+```rust
 fn first_word(s: &String) -> &str {
 ```
 
@@ -250,7 +250,7 @@ A more experienced Rustacean would write the signature shown in Listing 4-9
 instead because it allows us to use the same function on both `&String` values
 and `&str` values.
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch04-understanding-ownership/listing-04-09/src/main.rs:here}}
 ```
 

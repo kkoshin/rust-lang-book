@@ -17,7 +17,7 @@ for 5 seconds before responding.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,no_run
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-10/src/main.rs:here}}
 ```
 
@@ -108,7 +108,7 @@ to handle each stream within the `for` loop.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,no_run
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-11/src/main.rs:here}}
 ```
 
@@ -134,7 +134,7 @@ struct we want to use instead of `thread::spawn`.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-12/src/main.rs:here}}
 ```
 
@@ -173,7 +173,7 @@ definition of a `ThreadPool` struct that we can have for now:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/no-listing-01-define-threadpool-struct/src/lib.rs}}
 ```
 
@@ -182,7 +182,7 @@ crate by adding the following code to the top of *src/main.rs*:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/no-listing-01-define-threadpool-struct/src/main.rs:here}}
 ```
 
@@ -201,7 +201,7 @@ characteristics:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/no-listing-02-impl-threadpool-new/src/lib.rs}}
 ```
 
@@ -233,7 +233,7 @@ end up doing something similar to the standard library `thread::spawn`
 implementation, so we can look at what bounds the signature of `thread::spawn`
 has on its parameter. The documentation shows us the following:
 
-```rust,ignore
+```rust
 pub fn spawn<F, T>(f: F) -> JoinHandle<T>
     where
         F: FnOnce() -> T,
@@ -257,7 +257,7 @@ the thread will take to execute. Let’s create an `execute` method on
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/no-listing-03-define-execute/src/lib.rs:here}}
 ```
 
@@ -298,7 +298,7 @@ zero by using the `assert!` macro, as shown in Listing 20-13.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-13/src/lib.rs:here}}
 ```
 
@@ -318,7 +318,7 @@ thread pool without any threads should be an unrecoverable error. If you’re
 feeling ambitious, try to write a function named `build` with the following
 signature to compare with the `new` function:
 
-```rust,ignore
+```rust
 pub fn build(size: usize) -> Result<ThreadPool, PoolCreationError> {
 ```
 
@@ -329,7 +329,7 @@ the pool, we can create those threads and store them in the `ThreadPool` struct
 before returning the struct. But how do we “store” a thread? Let’s take another
 look at the `thread::spawn` signature:
 
-```rust,ignore
+```rust
 pub fn spawn<F, T>(f: F) -> JoinHandle<T>
     where
         F: FnOnce() -> T,
@@ -350,7 +350,7 @@ returned a `ThreadPool` instance containing them.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,not_desired_behavior
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-14/src/lib.rs:here}}
 ```
 
@@ -415,7 +415,7 @@ Ready? Here is Listing 20-15 with one way to make the preceding modifications.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-15/src/lib.rs:here}}
 ```
 
@@ -476,7 +476,7 @@ the channel.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-16/src/lib.rs:here}}
 ```
 
@@ -493,7 +493,7 @@ code in Listing 20-17 won’t quite compile yet.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-17/src/lib.rs:here}}
 ```
 
@@ -527,7 +527,7 @@ receiver at a time. Listing 20-18 shows the changes we need to make.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-18/src/lib.rs:here}}
 ```
 
@@ -551,7 +551,7 @@ ease of use. Look at Listing 20-19.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-19/src/lib.rs:here}}
 ```
 
@@ -575,7 +575,7 @@ shown in Listing 20-20 to `Worker::new`.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-20/src/lib.rs:here}}
 ```
 
@@ -663,7 +663,7 @@ why we didn’t write the worker thread code as shown in Listing 20-21.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,not_desired_behavior
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-21/src/lib.rs:here}}
 ```
 

@@ -26,7 +26,7 @@ program to reference data other than the data it’s intended to reference.
 Consider the program in Listing 10-16, which has an outer scope and an inner
 scope.
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-16/src/main.rs}}
 ```
 
@@ -65,7 +65,7 @@ The Rust compiler has a *borrow checker* that compares scopes to determine
 whether all borrows are valid. Listing 10-17 shows the same code as Listing
 10-16 but with annotations showing the lifetimes of the variables.
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-17/src/main.rs}}
 ```
 
@@ -106,7 +106,7 @@ print `The longest string is abcd`.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-19/src/main.rs}}
 ```
 
@@ -125,7 +125,7 @@ won’t compile.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-20/src/main.rs:here}}
 ```
 
@@ -174,7 +174,7 @@ Here are some examples: a reference to an `i32` without a lifetime parameter, a
 reference to an `i32` that has a lifetime parameter named `'a`, and a mutable
 reference to an `i32` that also has the lifetime `'a`.
 
-```rust,ignore
+```rust
 &i32        // a reference
 &'a i32     // a reference with an explicit lifetime
 &'a mut i32 // a mutable reference with an explicit lifetime
@@ -274,7 +274,7 @@ not compile.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/listing-10-23/src/main.rs:here}}
 ```
 
@@ -334,7 +334,7 @@ compile:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch10-generic-types-traits-and-lifetimes/no-listing-09-unrelated-lifetime/src/main.rs:here}}
 ```
 
@@ -412,7 +412,7 @@ in early versions (pre-1.0) of Rust, this code wouldn’t have compiled because
 every reference needed an explicit lifetime. At that time, the function
 signature would have been written like this:
 
-```rust,ignore
+```rust
 fn first_word<'a>(s: &'a str) -> &'a str {
 ```
 
@@ -468,7 +468,7 @@ lifetimes of the references in the signature of the `first_word` function in
 Listing 10-25. The signature starts without any lifetimes associated with the
 references:
 
-```rust,ignore
+```rust
 fn first_word(s: &str) -> &str {
 ```
 
@@ -476,7 +476,7 @@ Then the compiler applies the first rule, which specifies that each parameter
 gets its own lifetime. We’ll call it `'a` as usual, so now the signature is
 this:
 
-```rust,ignore
+```rust
 fn first_word<'a>(s: &'a str) -> &str {
 ```
 
@@ -484,7 +484,7 @@ The second rule applies because there is exactly one input lifetime. The second
 rule specifies that the lifetime of the one input parameter gets assigned to
 the output lifetime, so the signature is now this:
 
-```rust,ignore
+```rust
 fn first_word<'a>(s: &'a str) -> &'a str {
 ```
 
@@ -495,14 +495,14 @@ the lifetimes in this function signature.
 Let’s look at another example, this time using the `longest` function that had
 no lifetime parameters when we started working with it in Listing 10-20:
 
-```rust,ignore
+```rust
 fn longest(x: &str, y: &str) -> &str {
 ```
 
 Let’s apply the first rule: each parameter gets its own lifetime. This time we
 have two parameters instead of one, so we have two lifetimes:
 
-```rust,ignore
+```rust
 fn longest<'a, 'b>(x: &'a str, y: &'b str) -> &str {
 ```
 

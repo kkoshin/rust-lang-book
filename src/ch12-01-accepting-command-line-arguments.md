@@ -103,7 +103,7 @@ we can use the values throughout the rest of the program. We do that in Listing
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,should_panic,noplayground
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-02/src/main.rs}}
 ```
 

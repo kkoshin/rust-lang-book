@@ -68,7 +68,7 @@ The crate root file in this case is *src/main.rs*, and it contains:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,noplayground,ignore
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/quick-reference-example/src/main.rs}}
 ```
 
@@ -77,14 +77,14 @@ The `pub mod garden;` line tells the compiler to include the code it finds in
 
 <span class="filename">Filename: src/garden.rs</span>
 
-```rust,noplayground,ignore
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/quick-reference-example/src/garden.rs}}
 ```
 
 Here, `pub mod vegetables;` means the code in *src/garden/vegetables.rs* is
 included too. That code is:
 
-```rust,noplayground,ignore
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/quick-reference-example/src/garden/vegetables.rs}}
 ```
 
@@ -118,7 +118,7 @@ define some modules and function signatures. Here’s the front of house section
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-01/src/lib.rs}}
 ```
 

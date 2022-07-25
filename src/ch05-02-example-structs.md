@@ -30,7 +30,7 @@ and readable.
 
 The issue with this code is evident in the signature of `area`:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-08/src/main.rs:here}}
 ```
 
@@ -110,7 +110,7 @@ previous chapters. This won’t work, however.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch05-using-structs-to-structure-related-data/listing-05-11/src/main.rs}}
 ```
 

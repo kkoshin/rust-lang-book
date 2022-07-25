@@ -5,7 +5,7 @@
 > Documentation comments use `///` instead of `//` and support Markdown notation for formatting the text if you’d like.
 > You place documentation comments just before the item they are documenting. 
 
-```rust,no_run
+```rust
 /// Adds one to the number given.
 ///
 /// # Examples

@@ -35,7 +35,7 @@ want to send over the channel.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch16-fearless-concurrency/listing-16-06/src/main.rs}}
 ```
 
@@ -141,7 +141,7 @@ this code isn’t allowed:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch16-fearless-concurrency/listing-16-09/src/main.rs}}
 ```
 
@@ -174,7 +174,7 @@ pause for a second between each message.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch16-fearless-concurrency/listing-16-10/src/main.rs}}
 ```
 
@@ -217,7 +217,7 @@ so by cloning the transmitter, as shown in Listing 16-11:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch16-fearless-concurrency/listing-16-11/src/main.rs:here}}
 ```
 

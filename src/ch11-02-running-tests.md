@@ -60,7 +60,7 @@ parameter and returns 10, as well as a test that passes and a test that fails.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,panics,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-10/src/lib.rs}}
 ```
 
@@ -104,7 +104,7 @@ our `add_two` function, as shown in Listing 11-11, and choose which ones to run.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-11/src/lib.rs}}
 ```
 
@@ -158,7 +158,7 @@ here:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-11-ignore-a-test/src/lib.rs}}
 ```
 

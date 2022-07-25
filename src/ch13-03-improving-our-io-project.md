@@ -15,7 +15,7 @@ in Listing 12-23:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-12-23-reproduced/src/lib.rs:ch13}}
 ```
 
@@ -46,7 +46,7 @@ Open your I/O project’s *src/main.rs* file, which should look like this:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-12-24-reproduced/src/main.rs:ch13}}
 ```
 
@@ -56,7 +56,7 @@ won’t compile until we update `Config::build` as well.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-13-18/src/main.rs:here}}
 ```
 
@@ -75,7 +75,7 @@ function body.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-13-19/src/lib.rs:here}}
 ```
 
@@ -105,7 +105,7 @@ updates the code from Listing 12-23 to use the `next` method:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-13-20/src/lib.rs:here}}
 ```
 
@@ -127,7 +127,7 @@ project, which is reproduced here in Listing 13-21 as it was in Listing 12-19:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-19/src/lib.rs:ch13}}
 ```
 
@@ -143,7 +143,7 @@ concurrent access to the `results` vector. Listing 13-22 shows this change:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-13-22/src/lib.rs:here}}
 ```
 

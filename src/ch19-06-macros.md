@@ -77,7 +77,7 @@ Listing 19-28 shows a slightly simplified definition of the `vec!` macro.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-28/src/lib.rs}}
 ```
 
@@ -132,7 +132,7 @@ matches. The `$x` is replaced with each expression matched. When we call this
 macro with `vec![1, 2, 3];`, the code generated that replaces this macro call
 will be the following:
 
-```rust,ignore
+```rust
 {
     let mut temp_vec = Vec::new();
     temp_vec.push(1);
@@ -166,7 +166,7 @@ macro variety.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore
+```rust
 use proc_macro;
 
 #[some_attribute]
@@ -204,7 +204,7 @@ programmer to write code like Listing 19-30 using our crate.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-30/src/main.rs}}
 ```
 
@@ -222,14 +222,14 @@ Next, we’ll define the `HelloMacro` trait and its associated function:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-20-impl-hellomacro-for-pancakes/hello_macro/src/lib.rs}}
 ```
 
 We have a trait and its function. At this point, our crate user could implement
 the trait to achieve the desired functionality, like so:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-20-impl-hellomacro-for-pancakes/pancakes/src/main.rs}}
 ```
 
@@ -281,7 +281,7 @@ won’t compile until we add a definition for the `impl_hello_macro` function.
 
 <span class="filename">Filename: hello_macro_derive/src/lib.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-31/hello_macro/hello_macro_derive/src/lib.rs}}
 ```
 
@@ -321,7 +321,7 @@ operations on. This is where `syn` comes into play. The `parse` function in
 parsed Rust code. Listing 19-32 shows the relevant parts of the `DeriveInput`
 struct we get from parsing the `struct Pancakes;` string:
 
-```rust,ignore
+```rust
 DeriveInput {
     // --snip--
 
@@ -370,7 +370,7 @@ into a `DeriveInput` instance, let’s generate the code that implements the
 
 <span class="filename">Filename: hello_macro_derive/src/lib.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-33/hello_macro/hello_macro_derive/src/lib.rs:here}}
 ```
 
@@ -441,7 +441,7 @@ enums; attributes can be applied to other items as well, such as functions.
 Here’s an example of using an attribute-like macro: say you have an attribute
 named `route` that annotates functions when using a web application framework:
 
-```rust,ignore
+```rust
 #[route(GET, "/")]
 fn index() {
 ```
@@ -449,7 +449,7 @@ fn index() {
 This `#[route]` attribute would be defined by the framework as a procedural
 macro. The signature of the macro definition function would look like this:
 
-```rust,ignore
+```rust
 #[proc_macro_attribute]
 pub fn route(attr: TokenStream, item: TokenStream) -> TokenStream {
 ```
@@ -475,7 +475,7 @@ Metaprogramming”][decl]<!-- ignore --> earlier. Function-like macros take a
 using Rust code as the other two types of procedural macros do. An example of a
 function-like macro is an `sql!` macro that might be called like so:
 
-```rust,ignore
+```rust
 let sql = sql!(SELECT * FROM posts WHERE id=1);
 ```
 
@@ -483,7 +483,7 @@ This macro would parse the SQL statement inside it and check that it’s
 syntactically correct, which is much more complex processing than a
 `macro_rules!` macro can do. The `sql!` macro would be defined like this:
 
-```rust,ignore
+```rust
 #[proc_macro]
 pub fn sql(input: TokenStream) -> TokenStream {
 ```

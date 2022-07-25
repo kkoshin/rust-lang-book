@@ -65,7 +65,7 @@ an error.
 The main use case for type synonyms is to reduce repetition. For example, we
 might have a lengthy type like this:
 
-```rust,ignore
+```rust
 Box<dyn Fn() + Send + 'static>
 ```
 
@@ -103,14 +103,14 @@ possible I/O errors. Many of the functions in `std::io` will be returning
 `Result<T, E>` where the `E` is `std::io::Error`, such as these functions in
 the `Write` trait:
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-05-write-trait/src/lib.rs}}
 ```
 
 The `Result<..., Error>` is repeated a lot. As such, `std::io` has this type
 alias declaration:
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-06-result-alias/src/lib.rs:here}}
 ```
 
@@ -119,7 +119,7 @@ qualified alias `std::io::Result<T>`; that is, a `Result<T, E>` with the `E`
 filled in as `std::io::Error`. The `Write` trait function signatures end up
 looking like this:
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-06-result-alias/src/lib.rs:there}}
 ```
 
@@ -135,7 +135,7 @@ Rust has a special type named `!` that’s known in type theory lingo as the
 because it stands in the place of the return type when a function will never
 return. Here is an example:
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-07-never-type/src/lib.rs:here}}
 ```
 
@@ -147,7 +147,7 @@ But what use is a type you can never create values for? Recall the code from
 Listing 2-5, part of the number guessing game; we’ve reproduced a bit of it
 here in Listing 19-26.
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-05/src/main.rs:ch19}}
 ```
 
@@ -159,7 +159,7 @@ At the time, we skipped over some details in this code. In Chapter 6 in [“The
 section, we discussed that `match` arms must all return the same type. So, for
 example, the following code doesn’t work:
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-08-match-arms-different-types/src/main.rs:here}}
 ```
 
@@ -183,7 +183,7 @@ The never type is useful with the `panic!` macro as well. Recall the `unwrap`
 function that we call on `Option<T>` values to produce a value or panic with
 this definition:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-09-unwrap-definition/src/lib.rs:here}}
 ```
 
@@ -195,7 +195,7 @@ returning a value from `unwrap`, so this code is valid.
 
 One final expression that has the type `!` is a `loop`:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-10-loop-returns-never/src/main.rs:here}}
 ```
 
@@ -217,7 +217,7 @@ its own, is a DST. We can’t know how long the string is until runtime, meaning
 we can’t create a variable of type `str`, nor can we take an argument of type
 `str`. Consider the following code, which does not work:
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-11-cant-create-str/src/main.rs:here}}
 ```
 
@@ -258,13 +258,13 @@ for everything whose size is known at compile time. In addition, Rust
 implicitly adds a bound on `Sized` to every generic function. That is, a
 generic function definition like this:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-12-generic-fn-definition/src/lib.rs}}
 ```
 
 is actually treated as though we had written this:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-13-generic-implicit-sized-bound/src/lib.rs}}
 ```
 
@@ -272,7 +272,7 @@ By default, generic functions will work only on types that have a known size at
 compile time. However, you can use the following special syntax to relax this
 restriction:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-14-generic-maybe-sized/src/lib.rs}}
 ```
 

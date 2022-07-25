@@ -7,7 +7,7 @@
 > `while` loops evaluate a block of code until a condition ceases to be true.
 > A `for` loop executes some code for each item in a collection.
 
-```rust,no_run
+```rust
 loop {
     println!("again!");
 }

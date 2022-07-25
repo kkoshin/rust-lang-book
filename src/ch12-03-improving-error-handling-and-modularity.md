@@ -72,7 +72,7 @@ function `parse_config`, which we’ll define in *src/main.rs* for the moment.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-05/src/main.rs:here}}
 ```
 
@@ -114,7 +114,7 @@ Listing 12-6 shows the improvements to the `parse_config` function.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,should_panic,noplayground
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-06/src/main.rs:here}}
 ```
 
@@ -181,7 +181,7 @@ shows the changes we need to make.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,should_panic,noplayground
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-07/src/main.rs:here}}
 ```
 
@@ -216,7 +216,7 @@ enough, the program panics and displays a better error message.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-08/src/main.rs:here}}
 ```
 
@@ -267,7 +267,7 @@ well, which we’ll do in the next listing.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-09/src/main.rs:here}}
 ```
 
@@ -301,7 +301,7 @@ called our program that the program exited with an error state.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-10/src/main.rs:here}}
 ```
 
@@ -352,7 +352,7 @@ defining the function in *src/main.rs*.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-11/src/main.rs:here}}
 ```
 
@@ -375,7 +375,7 @@ signature and body of `run`.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-12/src/main.rs:here}}
 ```
 
@@ -426,7 +426,7 @@ with `Config::build` in Listing 12-10, but with a slight difference:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/no-listing-01-handling-errors-in-main/src/main.rs:here}}
 ```
 
@@ -460,7 +460,7 @@ compile until we modify *src/main.rs* in Listing 12-14.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-13/src/lib.rs:here}}
 ```
 
@@ -476,7 +476,7 @@ binary crate in *src/main.rs*, as shown in Listing 12-14.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch12-an-io-project/listing-12-14/src/main.rs:here}}
 ```
 

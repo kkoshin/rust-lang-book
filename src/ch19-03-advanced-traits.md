@@ -25,7 +25,7 @@ for the type of the values the type implementing the `Iterator` trait is
 iterating over. The definition of the `Iterator` trait is as shown in Listing
 19-12.
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-12/src/lib.rs}}
 ```
 
@@ -45,14 +45,14 @@ the `Item` type is `u32`:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-22-iterator-on-counter/src/lib.rs:ch19}}
 ```
 
 This syntax seems comparable to that of generics. So why not just define the
 `Iterator` trait with generics, as shown in Listing 19-13?
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-13/src/lib.rs}}
 ```
 
@@ -146,7 +146,7 @@ for `Millimeters` with `Meters` as the `Rhs`, as shown in Listing 19-15.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-15/src/lib.rs}}
 ```
 
@@ -280,7 +280,7 @@ Listing 19-20, we’ll get a compilation error.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/listing-19-20/src/main.rs:here}}
 ```
 
@@ -322,7 +322,7 @@ implemented on `Dog` by saying that we want to treat the `Dog` type as an
 
 In general, fully qualified syntax is defined as follows:
 
-```rust,ignore
+```rust
 <Type as Trait>::function(receiver_if_method, next_arg, ...);
 ```
 
@@ -386,7 +386,7 @@ doesn’t implement `Display`, such as the `Point` struct:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-02-impl-outlineprint-for-point/src/main.rs:here}}
 ```
 

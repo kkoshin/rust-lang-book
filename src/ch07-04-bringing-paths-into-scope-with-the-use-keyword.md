@@ -14,7 +14,7 @@ scope of the `eat_at_restaurant` function so we only have to specify
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground,test_harness
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-11/src/lib.rs}}
 ```
 
@@ -34,7 +34,7 @@ statement, so the function body won’t compile:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground,test_harness,does_not_compile,ignore
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-12/src/lib.rs}}
 ```
 
@@ -62,7 +62,7 @@ the `add_to_waitlist` function to achieve the same result, as in Listing 7-13.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground,test_harness
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-13/src/lib.rs}}
 ```
 
@@ -101,7 +101,7 @@ different parent modules and how to refer to them.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-15/src/lib.rs:here}}
 ```
 
@@ -122,7 +122,7 @@ the code in Listing 7-15 by renaming one of the two `Result` types using `as`.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-16/src/lib.rs:here}}
 ```
 
@@ -148,7 +148,7 @@ changed to `pub use`.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground,test_harness
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-17/src/lib.rs}}
 ```
 
@@ -201,7 +201,7 @@ we wanted to bring into scope. Recall that in the [“Generating a Random
 Number”][rand]<!-- ignore --> section in Chapter 2, we brought the `Rng` trait
 into scope and called the `rand::thread_rng` function:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-03/src/main.rs:ch07-04}}
 ```
 
@@ -232,7 +232,7 @@ Listing 2-4 bring items from `std` into scope:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/no-listing-01-use-std-unnested/src/main.rs:here}}
 ```
 
@@ -243,7 +243,7 @@ differ, as shown in Listing 7-18.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-18/src/main.rs:here}}
 ```
 
@@ -261,7 +261,7 @@ two `use` statements that share a subpath. For example, Listing 7-19 shows two
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-19/src/lib.rs}}
 ```
 
@@ -274,7 +274,7 @@ the nested path, as shown in Listing 7-20.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-20/src/lib.rs}}
 ```
 

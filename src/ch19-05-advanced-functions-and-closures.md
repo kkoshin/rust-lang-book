@@ -98,7 +98,7 @@ pointer `fn` as a return type, for example.
 
 The following code tries to return a closure directly, but it won’t compile:
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-18-returns-closure/src/lib.rs}}
 ```
 
@@ -112,7 +112,7 @@ The error references the `Sized` trait again! Rust doesn’t know how much space
 it will need to store the closure. We saw a solution to this problem earlier.
 We can use a trait object:
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch19-advanced-features/no-listing-19-returns-closure-trait-object/src/lib.rs}}
 ```
 

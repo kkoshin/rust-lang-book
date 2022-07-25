@@ -78,7 +78,7 @@ from the vector.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-13-12/src/lib.rs:here}}
 ```
 
@@ -117,7 +117,7 @@ test illustrating a use of the `sum` method:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-13-13/src/lib.rs:here}}
 ```
 
@@ -141,7 +141,7 @@ incremented by 1:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,not_desired_behavior
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-13-14/src/main.rs:here}}
 ```
 
@@ -203,7 +203,7 @@ instances. It will return only shoes that are the specified size.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch13-functional-features/listing-13-16/src/lib.rs}}
 ```
 

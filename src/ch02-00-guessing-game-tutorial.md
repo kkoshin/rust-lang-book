@@ -74,7 +74,7 @@ allow the player to input a guess. Enter the code in Listing 2-1 into
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:all}}
 ```
 
@@ -86,7 +86,7 @@ obtain user input and then print the result as output, we need to bring the
 `io` input/output library into scope. The `io` library comes from the
 standard library, known as `std`:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:io}}
 ```
 
@@ -102,7 +102,7 @@ user input.
 As you saw in Chapter 1, the `main` function is the entry point into the
 program:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:main}}
 ```
 
@@ -112,7 +112,7 @@ are no parameters, and the curly bracket, `{`, starts the body of the function.
 As you also learned in Chapter 1, `println!` is a macro that prints a string to
 the screen:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:print}}
 ```
 
@@ -123,14 +123,14 @@ from the user.
 
 Next, we’ll create a *variable* to store the user input, like this:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:string}}
 ```
 
 Now the program is getting interesting! There’s a lot going on in this little
 line. We use the `let` statement to create the variable. Here’s another example:
 
-```rust,ignore
+```rust
 let apples = 5;
 ```
 
@@ -141,7 +141,7 @@ the [“Variables and Mutability”][variables-and-mutability]<!-- ignore -->
 section in Chapter 3. To make a variable mutable, we add `mut` before the
 variable name:
 
-```rust,ignore
+```rust
 let apples = 5; // immutable
 let mut bananas = 5; // mutable
 ```
@@ -174,7 +174,7 @@ library with `use std::io;` on the first line of the program. Now we’ll call
 the `stdin` function from the `io` module, which will allow us to handle user
 input:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:read}}
 ```
 
@@ -209,13 +209,13 @@ We’re still working on this line of code. We’re now discussing a third line 
 text, but note that it’s still part of a single logical line of code. The next
 part is this method:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:expect}}
 ```
 
 We could have written this code as:
 
-```rust,ignore
+```rust
 io::stdin().read_line(&mut guess).expect("Failed to read line");
 ```
 
@@ -267,7 +267,7 @@ use `expect`. You’ll learn about recovering from errors in [Chapter
 Aside from the closing curly bracket, there’s only one more line to discuss in
 the code so far:
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-01/src/main.rs:print_guess}}
 ```
 
@@ -505,7 +505,7 @@ update *src/main.rs*, as shown in Listing 2-3.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-03/src/main.rs:all}}
 ```
 
@@ -582,7 +582,7 @@ will explain.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-04/src/main.rs:here}}
 ```
 
@@ -647,13 +647,13 @@ by adding this line to the `main` function body:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/no-listing-03-convert-string-to-number/src/main.rs:here}}
 ```
 
 The line is:
 
-```rust,ignore
+```rust
 let guess: u32 = guess.trim().parse().expect("Please type a number!");
 ```
 
@@ -738,7 +738,7 @@ more chances at guessing the number:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/no-listing-04-looping/src/main.rs:here}}
 ```
 
@@ -798,7 +798,7 @@ Let’s program the game to quit when the user wins by adding a `break` statemen
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/no-listing-05-quitting/src/main.rs:here}}
 ```
 
@@ -815,7 +815,7 @@ is converted from a `String` to a `u32`, as shown in Listing 2-5.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-05/src/main.rs:here}}
 ```
 
@@ -885,7 +885,7 @@ secret number. Listing 2-6 shows the final code.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch02-guessing-game-tutorial/listing-02-06/src/main.rs}}
 ```
 

@@ -6,7 +6,7 @@
 > The `Sized` trait is automatically implemented for everything the compiler knows the size of at compile time.
 > A trait bound on `?Sized` is the opposite of a trait bound on `Sized`; that is, we would read this as “`T` may or may not be `Sized`”.
 
-```rust,ignore
+```rust
 fn generic<T: ?Sized>(t: &T) {
     // ...snip...
 }

@@ -36,7 +36,7 @@ gets an incoming stream, it will print `Connection established!`.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,no_run
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-01/src/main.rs}}
 ```
 
@@ -129,7 +129,7 @@ look like Listing 20-2.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,no_run
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-02/src/main.rs}}
 ```
 
@@ -275,7 +275,7 @@ Listing 20-3.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,no_run
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-03/src/main.rs:here}}
 ```
 
@@ -318,7 +318,7 @@ and send it.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,no_run
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-05/src/main.rs:here}}
 ```
 
@@ -358,7 +358,7 @@ received against what we know a request for */* looks like and adds `if` and
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,no_run
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-06/src/main.rs:here}}
 ```
 
@@ -392,7 +392,7 @@ indicating the response to the end user.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,no_run
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-07/src/main.rs:here}}
 ```
 
@@ -431,7 +431,7 @@ the large `if` and `else` blocks.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,no_run
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-09/src/main.rs:here}}
 ```
 

@@ -22,7 +22,7 @@ match VALUE {
 For example, here's the `match` expression from Listing 6-5 that matches on an
 `Option<i32>` value in the variable `x`:
 
-```rust,ignore
+```rust
 match x {
     None => None,
     Some(i) => Some(i + 1),
@@ -188,7 +188,7 @@ in the tuple, the overall type won’t match and we’ll get a compiler error. F
 example, Listing 18-5 shows an attempt to destructure a tuple with three
 elements into two variables, which won’t work.
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch18-patterns-and-matching/listing-18-05/src/main.rs:here}}
 ```
 

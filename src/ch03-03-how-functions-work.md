@@ -131,7 +131,7 @@ to another variable, as the following code tries to do; you’ll get an error:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-19-statements-vs-expressions/src/main.rs}}
 ```
 
@@ -163,7 +163,7 @@ curly brackets is an expression, for example:
 
 This expression:
 
-```rust,ignore
+```rust
 {
     let x = 3;
     x + 1
@@ -230,7 +230,7 @@ expression to a statement, we’ll get an error.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch03-common-programming-concepts/no-listing-23-statements-dont-return-values/src/main.rs}}
 ```
 

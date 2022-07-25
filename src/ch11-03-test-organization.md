@@ -37,7 +37,7 @@ this chapter, Cargo generated this code for us:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-01/src/lib.rs}}
 ```
 
@@ -60,7 +60,7 @@ Consider the code in Listing 11-12 with the private function `internal_adder`.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-12/src/lib.rs}}
 ```
 
@@ -110,7 +110,7 @@ Enter the code in Listing 11-13 into the *tests/integration_test.rs* file:
 
 <span class="filename">Filename: tests/integration_test.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/listing-11-13/tests/integration_test.rs}}
 ```
 
@@ -179,7 +179,7 @@ we want to call from multiple test functions in multiple test files:
 
 <span class="filename">Filename: tests/common.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-12-shared-test-code-problem/tests/common.rs}}
 ```
 
@@ -225,7 +225,7 @@ function from the `it_adds_two` test in *tests/integration_test.rs*:
 
 <span class="filename">Filename: tests/integration_test.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch11-writing-automated-tests/no-listing-13-fix-shared-test-code-problem/tests/integration_test.rs}}
 ```
 

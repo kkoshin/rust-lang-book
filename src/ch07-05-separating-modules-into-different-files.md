@@ -18,7 +18,7 @@ shown in Listing 7-21. Note that this won’t compile until we create the
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-21-and-22/src/lib.rs}}
 ```
 
@@ -32,7 +32,7 @@ with the name `front_of_house`.
 
 <span class="filename">Filename: src/front_of_house.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/listing-07-21-and-22/src/front_of_house.rs}}
 ```
 
@@ -58,7 +58,7 @@ declaration of the `hosting` module:
 
 <span class="filename">Filename: src/front_of_house.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/no-listing-02-extracting-hosting/src/front_of_house.rs}}
 ```
 
@@ -67,7 +67,7 @@ contain the definitions made in the `hosting` module:
 
 <span class="filename">Filename: src/front_of_house/hosting.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch07-managing-growing-projects/no-listing-02-extracting-hosting/src/front_of_house/hosting.rs}}
 ```
 

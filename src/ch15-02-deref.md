@@ -110,7 +110,7 @@ code in Listing 15-9 won’t compile because Rust doesn’t know how to derefere
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch15-smart-pointers/listing-15-09/src/main.rs:here}}
 ```
 
@@ -164,7 +164,7 @@ it knows how to dereference.
 When we entered `*y` in Listing 15-9, behind the scenes Rust actually ran this
 code:
 
-```rust,ignore
+```rust
 *(y.deref())
 ```
 

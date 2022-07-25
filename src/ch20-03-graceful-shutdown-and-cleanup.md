@@ -24,7 +24,7 @@ quite work yet.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-22/src/lib.rs:here}}
 ```
 
@@ -59,7 +59,7 @@ So we know we want to update the definition of `Worker` like this:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/no-listing-04-update-worker-definition/src/lib.rs:here}}
 ```
 
@@ -76,7 +76,7 @@ new `Worker`. Make the following changes to fix this error:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,does_not_compile
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/no-listing-05-fix-worker-new/src/lib.rs:here}}
 ```
 
@@ -86,7 +86,7 @@ The following changes will do so:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,ignore,not_desired_behavior
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/no-listing-06-fix-threadpool-drop/src/lib.rs:here}}
 ```
 
@@ -117,7 +117,7 @@ of `ThreadPool`:
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground,not_desired_behavior
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-23/src/lib.rs:here}}
 ```
 
@@ -132,7 +132,7 @@ finish when the `ThreadPool` `drop` implementation calls `join` on them.
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-24/src/lib.rs:here}}
 ```
 
@@ -144,7 +144,7 @@ before gracefully shutting down the server, as shown in Listing 20-25.
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/listing-20-25/src/main.rs:here}}
 ```
 
@@ -215,13 +215,13 @@ Here’s the full code for reference:
 
 <span class="filename">Filename: src/main.rs</span>
 
-```rust,ignore
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/no-listing-07-final-code/src/main.rs}}
 ```
 
 <span class="filename">Filename: src/lib.rs</span>
 
-```rust,noplayground
+```rust
 {{#rustdoc_include ../listings/ch20-web-server/no-listing-07-final-code/src/lib.rs}}
 ```
 
